@@ -1,0 +1,21 @@
+﻿<Window x:Class="WPFGUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFGUI"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="190" MinHeight="100" MaxHeight="300" Width="680" MinWidth="300" MaxWidth="800"
+        Background="Transparent" AllowsTransparency="True" WindowStyle="None" ResizeMode="CanResizeWithGrip"
+        MouseDown="Window_DragMove" MouseDoubleClick="Window_MouseDoubleClick" Topmost="True">
+    <Grid>
+        <Border x:Name="BreathingBorder"  CornerRadius="4,4,0,4" Margin="8" BorderThickness="6" BorderBrush="White" Opacity="0.8" IsHitTestVisible="False">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="0" Color="#FF414141" BlurRadius="8"/>
+            </Border.Effect>
+        </Border>
+        <Grid Margin="20">
+            <Frame x:Name="MainFrame" Content=""  NavigationUIVisibility="Hidden" Background="Transparent"/>
+        </Grid>
+    </Grid>
+</Window>
