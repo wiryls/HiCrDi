@@ -26,7 +26,10 @@ namespace WPFGUI
         {
             i++;
 
-            var fs = File.Open(i.ToString() + ".png", FileMode.OpenOrCreate);
+            if(i % 7 == 0)
+                action.Jump();
+            
+            var fs = File.Open("pics\\" + i.ToString() + ".png", FileMode.OpenOrCreate);
             System.Drawing.Bitmap bitmap = null;
 
             MainFrame.Dispatcher.Invoke( new Action (delegate {
@@ -39,7 +42,10 @@ namespace WPFGUI
             fs.Close();
         }
 
-        Timer mainTimer = new Timer() {
+
+        private ActionHelper action = new ActionHelper();
+
+        private Timer mainTimer = new Timer() {
             Interval = 50,
             Enabled = false,
         };

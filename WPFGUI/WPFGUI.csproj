@@ -63,8 +63,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Other\ActionHelper.cs" />
     <Compile Include="Other\ImageHelper.cs" />
     <Compile Include="Other\IntermediateImage.cs" />
+    <Compile Include="Other\Simulation.cs" />
     <Compile Include="WindowControl.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

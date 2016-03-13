@@ -9,12 +9,20 @@
         Background="Transparent" AllowsTransparency="True" WindowStyle="None" ResizeMode="CanResizeWithGrip"
         MouseDown="Window_DragMove" MouseDoubleClick="Window_MouseDoubleClick" Topmost="True">
     <Grid>
-        <Border x:Name="BreathingBorder"  CornerRadius="4,4,0,4" Margin="8" BorderThickness="6" BorderBrush="White" Opacity="0.8" IsHitTestVisible="False">
+        <Border x:Name="BreathingBorder" CornerRadius="4,4,0,4" Margin="4" BorderThickness="6" 
+                BorderBrush="White" Opacity="0.8" >
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="0" Color="#FF414141" BlurRadius="8"/>
             </Border.Effect>
+            <Border.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="_Switch" Click="Window_Switch"/>
+                    <Separator />
+                    <MenuItem Header="_Exit" Click="Window_Close"/>
+                </ContextMenu>
+            </Border.ContextMenu>
         </Border>
-        <Grid Margin="20">
+        <Grid Margin="16">
             <Frame x:Name="MainFrame" Content=""  NavigationUIVisibility="Hidden" Background="Transparent"/>
         </Grid>
     </Grid>
