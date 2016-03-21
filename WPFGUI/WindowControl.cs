@@ -1,99 +1,72 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
+using WPFGUI.Other;
 
 namespace WPFGUI
 {
     public partial class MainWindow : Window
     {
-        private void Window_Close(object sender, RoutedEventArgs e)
+        static int i = 0;
+        private void ProcessFrame(object source, ElapsedEventArgs e)
         {
-            Close();
-            e.Handled = true;
-            /* References:
-             * 
-             * [Creating a custom Close Button in WPF]
-             * (http://stackoverflow.com/questions/5193763/creating-a-custom-close-button-in-wpf)
-             */
-        }
+            if(i++ % 7 == 7)
+                this.action.Jump();
 
-        private void Window_Switch(object sender, RoutedEventArgs e)
-        {
-            SwitchStatus();
-            e.Handled = true;
-        }
+            if(isTesting) {
 
-        private void Window_DragMove(object sender, MouseButtonEventArgs e)
-        {
-            if(e.LeftButton == MouseButtonState.Pressed)
-                DragMove();
-        }
+                var bitmap = this.Dispatcher.Invoke(()=> {
+                    return ImageHelper.CaptureElement(this.MainFrame);
+                });
 
-        private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            if(e.ChangedButton == MouseButton.Left)
-                SwitchStatus();
+                BitmapSource bitmapSource = ImageHelper.Bitmap2BitmapSource(bitmap);
 
-            /* References:
-             * 
-             * [How do you detect a mouse double left click in WPF?]
-             * (http://stackoverflow.com/questions/11868956/how-do-you-detect-a-mouse-double-left-click-in-wpf)
-             */
-        }
+                // TODO: 
 
-        private void SwitchStatus()
-        {
-            switch(globalStatus) {
-            default:
-            case RunningStatus.Settings:
-                ChangeStatus(RunningStatus.Running);
-                break;
-            case RunningStatus.Running:
-            case RunningStatus.Capturing:
-                ChangeStatus(RunningStatus.Settings);
-                break;
+                if(isTesting) {
+                    bitmapSource.Freeze();
+                    this.Dispatcher.BeginInvoke(new Action<BitmapSource>((img) =>
+                        this.DebugOutput.Source = img
+                    ), bitmapSource);
+                }
             }
+
+            //{
+            //    var img = new IntermediateImage(bitmapSource);
+            //    var fs = File.Open("pics\\" + i.ToString() + ".png", FileMode.OpenOrCreate);
+            //    ImageHelper.GenerateImage(bitmapSource, ".png", fs);
+            //    fs.Close();
+            //}
+
+            /* References:
+             *
+             * [Passing Objects as Arguments to Dispatcher.Invoke in WPF]
+             * (http://stackoverflow.com/questions/24790835/passing-objects-as-arguments-to-dispatcher-invoke-in-wpf)
+             * [Dispatch.Invoke( new Action…) with a parameter]
+             * (http://stackoverflow.com/questions/14738533/dispatch-invoke-new-action-with-a-parameter)
+             */
         }
 
-        private void ChangeStatus(RunningStatus status)
+        private void UpdateBorderEffect()
         {
-            if(globalStatus == status)
-                return;
-            else 
-               globalStatus = status;
-
-            mainTimer.Enabled = (
-                globalStatus == RunningStatus.Running || 
-                globalStatus == RunningStatus.Capturing
-                );
-
             ColorAnimation animation = new ColorAnimation()
             {
                 Duration = new Duration(TimeSpan.FromSeconds(0.618)),
                 FillBehavior = FillBehavior.HoldEnd
             };
 
-            switch(globalStatus) {
-            default:
-            case RunningStatus.Settings:
+            if (!isRunning) {
                 animation.To = Color.FromScRgb(0.8f, 1.0f, 1.0f, 1.0f);
-                break;
-            case RunningStatus.Running:
+            } else if (!isHitting) {
                 animation.To = Color.FromScRgb(0.8f, 1.0f, 0.0f, 0.0f);
-                break;
-            case RunningStatus.Capturing:
+            } else { /* isRunning && Hitting */
                 animation.To = Color.FromScRgb(0.85f, 0.05f, 1.0f, 0.05f);
                 animation.From = Color.FromScRgb(0.75f, 0.1f, 0.9f, 0.1f);
                 animation.RepeatBehavior = RepeatBehavior.Forever;
                 animation.AutoReverse = true;
-                break;
             }
 
             Storyboard stroy = new Storyboard();
@@ -115,13 +88,19 @@ namespace WPFGUI
              */
         }
 
-        private enum RunningStatus
-        {
-            Settings,
-            Capturing,
-            Running,
-        }
 
-        private RunningStatus globalStatus = RunningStatus.Settings;
+        private ActionHelper action = new ActionHelper();
+
+        private Timer mainTimer = new Timer()
+        {
+            Interval = 50,
+            Enabled = false,
+        };
+
+        /* References:
+         * 
+         * [Repeating a function every few seconds]
+         * (http://stackoverflow.com/questions/11296897/repeating-a-function-every-few-seconds)
+         */
     }
 }

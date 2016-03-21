@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Timers;
+﻿using System.Timers;
 using System.Windows;
-using System.Windows.Media.Imaging;
-using WPFGUI.Other;
+using System.Windows.Input;
 
 namespace WPFGUI
 {
@@ -18,44 +12,42 @@ namespace WPFGUI
         public MainWindow()
         {
             InitializeComponent();
-            mainTimer.Elapsed += new ElapsedEventHandler(ProcessFrame);
+            this.View.DataContext = this;
+            // SwitchTest();
+            this.mainTimer.Elapsed += new ElapsedEventHandler(ProcessFrame);
         }
 
-        static int i = 0;
-        private void ProcessFrame(object source, ElapsedEventArgs e)
+        private void Window_Close(object sender, RoutedEventArgs e)
         {
-            i++;
-
-            if(i % 7 == 0)
-                action.Jump();
-            
-            var fs = File.Open("pics\\" + i.ToString() + ".png", FileMode.OpenOrCreate);
-            System.Drawing.Bitmap bitmap = null;
-
-            MainFrame.Dispatcher.Invoke( new Action (delegate {
-                bitmap = ImageHelper.CaptureElement(MainFrame);
-            }));
-
-            var bitmapSource = ImageHelper.Bitmap2BitmapSource(bitmap);
-            var img = new IntermediateImage(bitmapSource);
-            ImageHelper.GenerateImage(bitmapSource, ".png", fs);
-            fs.Close();
+            Close();
+            e.Handled = true;
+            /* References:
+             * 
+             * [Creating a custom Close Button in WPF]
+             * (http://stackoverflow.com/questions/5193763/creating-a-custom-close-button-in-wpf)
+             */
         }
 
+        private void Window_DragMove(object sender, MouseButtonEventArgs e)
+        {
+            if(e.LeftButton == MouseButtonState.Pressed) {
+                DragMove();
+                e.Handled = true;
+            }
+        }
 
-        private ActionHelper action = new ActionHelper();
+        private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if(e.ChangedButton == MouseButton.Left) {
+                this.IsRunning = !this.IsRunning;
+                e.Handled = true;
+            }
 
-        private Timer mainTimer = new Timer() {
-            Interval = 50,
-            Enabled = false,
-        };
-
-        /*
-         * References：
-         * 
-         * [Repeating a function every few seconds]
-         * (http://stackoverflow.com/questions/11296897/repeating-a-function-every-few-seconds)
-         */
-
+            /* References:
+             * 
+             * [How do you detect a mouse double left click in WPF?]
+             * (http://stackoverflow.com/questions/11868956/how-do-you-detect-a-mouse-double-left-click-in-wpf)
+             */
+        }
     }
 }

@@ -6,24 +6,44 @@
         xmlns:local="clr-namespace:WPFGUI"
         mc:Ignorable="d"
         Title="MainWindow" Height="190" MinHeight="100" MaxHeight="300" Width="680" MinWidth="300" MaxWidth="800"
-        Background="Transparent" AllowsTransparency="True" WindowStyle="None" ResizeMode="CanResizeWithGrip"
-        MouseDown="Window_DragMove" MouseDoubleClick="Window_MouseDoubleClick" Topmost="True">
-    <Grid>
-        <Border x:Name="BreathingBorder" CornerRadius="4,4,0,4" Margin="4" BorderThickness="6" 
-                BorderBrush="White" Opacity="0.8" >
-            <Border.Effect>
-                <DropShadowEffect ShadowDepth="0" Color="#FF414141" BlurRadius="8"/>
-            </Border.Effect>
-            <Border.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="_Switch" Click="Window_Switch"/>
-                    <Separator />
-                    <MenuItem Header="_Exit" Click="Window_Close"/>
-                </ContextMenu>
-            </Border.ContextMenu>
-        </Border>
-        <Grid Margin="16">
-            <Frame x:Name="MainFrame" Content=""  NavigationUIVisibility="Hidden" Background="Transparent"/>
+        Background="Transparent" AllowsTransparency="True" WindowStyle="None" ResizeMode="CanResizeWithGrip" Topmost="True"
+        MouseDown="Window_DragMove" MouseDoubleClick="Window_MouseDoubleClick" >
+    <Grid x:Name="View" >
+        <Grid.Resources>
+            <ContextMenu x:Key="MainMenu">
+                <MenuItem Header="_Testing" IsCheckable="true" IsChecked="{Binding Path=IsTesting, Mode=TwoWay}"/>
+                <MenuItem Header="_Running" IsCheckable="true" IsChecked="{Binding Path=IsRunning, Mode=TwoWay}"/>
+                <Separator />
+                <MenuItem Header="_Ex it  " Click="Window_Close"/>
+            </ContextMenu>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="0*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Border x:Name="BreathingBorder" CornerRadius="4,4,0,4" Margin="4" BorderThickness="6" 
+                BorderBrush="White" Opacity="0.8" 
+                ContextMenu="{DynamicResource MainMenu}">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="0" Color="#FF414141" BlurRadius="6"/>
+                </Border.Effect>
+            </Border>
+            <Grid Margin="12">
+                <Frame x:Name="MainFrame" Content="" NavigationUIVisibility="Hidden" Background="Transparent"/>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Border CornerRadius="4,4,0,4" Margin="4" BorderThickness="6" 
+                BorderBrush="#FF3157FF" Opacity="0.8" 
+                ContextMenu="{DynamicResource MainMenu}" >
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="0" Color="#FF414141" BlurRadius="6"/>
+                </Border.Effect>
+            </Border>
+            <Grid Margin="12">
+                <Image x:Name="DebugOutput" IsHitTestVisible="False"/>
+            </Grid>
         </Grid>
     </Grid>
 </Window>
