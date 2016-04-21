@@ -59,11 +59,11 @@ namespace WPFGUI
             };
 
             if (!isRunning) {
-                animation.To = Color.FromScRgb(0.8f, 1.0f, 1.0f, 1.0f);
+                animation.To   = Color.FromScRgb(0.8f, 1.0f, 1.0f, 1.0f);
             } else if (!isHitting) {
-                animation.To = Color.FromScRgb(0.8f, 1.0f, 0.0f, 0.0f);
+                animation.To   = Color.FromScRgb(0.8f, 1.0f, 0.0f, 0.0f);
             } else { /* isRunning && Hitting */
-                animation.To = Color.FromScRgb(0.85f, 0.05f, 1.0f, 0.05f);
+                animation.To   = Color.FromScRgb(0.85f, 0.05f, 1.0f, 0.05f);
                 animation.From = Color.FromScRgb(0.75f, 0.1f, 0.9f, 0.1f);
                 animation.RepeatBehavior = RepeatBehavior.Forever;
                 animation.AutoReverse = true;

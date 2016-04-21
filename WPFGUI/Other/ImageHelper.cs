@@ -21,20 +21,13 @@ namespace WPFGUI.Other
             Point screenPosition = target.PointToScreen(new Point(rect.X, rect.Y));
 
             var bmp = new System.Drawing.Bitmap(
-                (int)rect.Width, 
-                (int)rect.Height, 
-                System.Drawing.Imaging.PixelFormat.Format32bppArgb
-                );
+                (int)rect.Width, (int)rect.Height, 
+                System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             var g = System.Drawing.Graphics.FromImage(bmp);
             g.CopyFromScreen(
-                (int)screenPosition.X,
-                (int)screenPosition.Y,
-                0, 
-                0, 
-                bmp.Size, 
-                System.Drawing.CopyPixelOperation.SourceCopy
-                );
+                (int)screenPosition.X, (int)screenPosition.Y, 0, 0, 
+                bmp.Size, System.Drawing.CopyPixelOperation.SourceCopy);
             
             return bmp;
 
@@ -74,11 +67,11 @@ namespace WPFGUI.Other
             BitmapEncoder encoder = null;
             switch(lowerExtension) {
             case ".jpg": { encoder = new JpegBitmapEncoder(); break; }
-            case ".png": { encoder = new PngBitmapEncoder(); break; }
-            case ".bmp": { encoder = new BmpBitmapEncoder(); break; }
-            case ".gif": { encoder = new GifBitmapEncoder(); break; }
+            case ".png": { encoder = new PngBitmapEncoder (); break; }
+            case ".bmp": { encoder = new BmpBitmapEncoder (); break; }
+            case ".gif": { encoder = new GifBitmapEncoder (); break; }
             case ".tif": { encoder = new TiffBitmapEncoder(); break; }
-            default: { encoder = new BmpBitmapEncoder(); break; }
+            default:     { encoder = new BmpBitmapEncoder (); break; }
             }
             encoder.Frames.Add(BitmapFrame.Create(bitmap));
             encoder.Save(destStream);
