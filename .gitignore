@@ -1,5 +1,8 @@
 ## add by me
 
+test/*.mp4
+test/*.bmp
+test/*.png
 test/*.dll
 external/include/*
 external/lib/*

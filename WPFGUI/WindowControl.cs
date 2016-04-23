@@ -13,10 +13,13 @@ namespace WPFGUI
         static int i = 0;
         private void ProcessFrame(object source, ElapsedEventArgs e)
         {
+            // TODO:
             if(i++ % 7 == 7)
                 this.action.Jump();
 
             if(isTesting) {
+
+                mutex.WaitOne();
 
                 var bitmap = this.Dispatcher.Invoke(()=> {
                     return ImageHelper.CaptureElement(this.MainFrame);
@@ -25,6 +28,9 @@ namespace WPFGUI
                 BitmapSource bitmapSource = ImageHelper.Bitmap2BitmapSource(bitmap);
 
                 // TODO: 
+                var tmp = new IntermediateImage(bitmapSource);
+                libheartbeat.test(tmp.ImagePixels, tmp.ImagePixels, (uint)tmp.Info.Width, (uint)tmp.Info.Height);
+                bitmapSource = tmp.ToBitmapSource();
 
                 if(isTesting) {
                     bitmapSource.Freeze();
@@ -32,6 +38,8 @@ namespace WPFGUI
                         this.DebugOutput.Source = img
                     ), bitmapSource);
                 }
+
+                mutex.ReleaseMutex();
             }
 
             //{
@@ -91,9 +99,11 @@ namespace WPFGUI
 
         private ActionHelper action = new ActionHelper();
 
+        private System.Threading.Mutex mutex = new System.Threading.Mutex();
+
         private Timer mainTimer = new Timer()
         {
-            Interval = 50,
+            Interval = 40,
             Enabled = false,
         };
 

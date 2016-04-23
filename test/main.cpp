@@ -14,14 +14,17 @@
 
 /* function */
 
+
 int main(void)
 {
-	std::cout << hb::version() << std::endl;
+	std::cout << "ver:" << hb::version() << std::endl;
 
-	hb::Heart *   heart = hb::i_come();
-	hb::i_see    (heart, nullptr, 0U, 0U);
-	hb::i_conquer(heart);
-	heart = nullptr;
+	//hb::Heart *   heart = hb::i_come();
+	//hb::i_see    (heart, nullptr, 0U, 0U);
+	//hb::i_sleep(heart);
+	//heart = nullptr;
+
+	hb::test(nullptr, nullptr, 0, 0);
 
 	return 0;
 }

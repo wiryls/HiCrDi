@@ -26,7 +26,12 @@ LIBHEARTBEAT_API bool hb::i_see(Heart * i, uint8_t const bgra32[], size_t wid, s
 	return false;
 }
 
-LIBHEARTBEAT_API void hb::i_conquer(Heart * i)
+LIBHEARTBEAT_API bool hb::i_jump()
+{
+	return false;
+}
+
+LIBHEARTBEAT_API void hb::i_sleep(Heart * i)
 {
 	delete i;
 }

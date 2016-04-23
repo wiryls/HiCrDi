@@ -13,7 +13,7 @@ namespace WPFGUI
         {
             InitializeComponent();
             this.View.DataContext = this;
-            // SwitchTest();
+            this.IsTesting = true;
             this.mainTimer.Elapsed += new ElapsedEventHandler(ProcessFrame);
         }
 

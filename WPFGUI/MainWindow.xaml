@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFGUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="190" MinHeight="100" MaxHeight="300" Width="680" MinWidth="300" MaxWidth="800"
+        Title="MainWindow" Height="180" MinHeight="100" MaxHeight="300" Width="640" MinWidth="300" MaxWidth="800"
         Background="Transparent" AllowsTransparency="True" WindowStyle="None" ResizeMode="CanResizeWithGrip" Topmost="True"
         MouseDown="Window_DragMove" MouseDoubleClick="Window_MouseDoubleClick" >
     <Grid x:Name="View" >
@@ -29,7 +29,7 @@
                     <DropShadowEffect ShadowDepth="0" Color="#FF414141" BlurRadius="6"/>
                 </Border.Effect>
             </Border>
-            <Grid Margin="12">
+            <Grid Margin="15">
                 <Frame x:Name="MainFrame" Content="" NavigationUIVisibility="Hidden" Background="Transparent"/>
             </Grid>
         </Grid>
@@ -41,7 +41,7 @@
                     <DropShadowEffect ShadowDepth="0" Color="#FF414141" BlurRadius="6"/>
                 </Border.Effect>
             </Border>
-            <Grid Margin="12">
+            <Grid Margin="15">
                 <Image x:Name="DebugOutput" IsHitTestVisible="False"/>
             </Grid>
         </Grid>

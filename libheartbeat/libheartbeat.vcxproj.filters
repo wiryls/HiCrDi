@@ -24,12 +24,21 @@
     <ClInclude Include="resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="feel.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libheartbeat.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="heart.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="feel.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
