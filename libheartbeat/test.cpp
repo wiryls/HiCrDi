@@ -9,44 +9,80 @@
  *********************************************************************/ 
 
 /* headers */
+#include <sstream>
 #include <iostream>
 #include <string>
 
 #include <opencv2/opencv.hpp>
 
+#include "log.hpp"
+#include "timer.hpp"
 #include "feel.hpp"
+#include "cogn.hpp"
 #include "libheartbeat.hpp"
 
 /* function */
 
+cm::Timer timer;
 cv::Mat src, dst;
 hb::Feel feel;
+hb::Cogn cogn;
 char const wname[] = "test";
 
 static void recalc(bool show = true) 
 {
+	float delta_time = (timer.getElapsedTime() / 1000.0f);
+	if (delta_time > 1.0f)
+		delta_time = 0.001f;
+	timer.start();
+
 	dst = feel.oh_i_feel(src);
-
-	//cv::rectangle(dst, cv::Rect(5, 5, 100, 100), cv::Scalar::all(255));
-
+	char buffer[11];
+	auto dinosaur_senses = feel.where_are(hb::ObjectType::DINOSAUR);
+	auto cactus_senses = feel.where_are(hb::ObjectType::CACTUS);
+	auto birds_senses = feel.where_are(hb::ObjectType::BIRD);
 	{
-		auto r = feel.me();
-		cv::rectangle(dst, r, cv::Scalar::all(255));
-	}	
-	{
-		auto rs = feel.cactus();
-		for (auto & r : rs)
-			cv::rectangle(dst, r, cv::Scalar::all(196));
-	}
-	{
-		auto rs = feel.birds();
-		for (auto & r : rs)
+		for (auto & s : dinosaur_senses) {
+			cv::Rect r = hb::toRect(s);
+			std::sprintf(buffer, "%.2f", s.s);
+			cv::putText(dst, buffer, r.br(), cv::FONT_HERSHEY_COMPLEX, 0.4, cv::Scalar::all(128));
 			cv::rectangle(dst, r, cv::Scalar::all(128));
+		}
 	}
-	//{
-	//	auto r = feel.score();
-	//	cv::rectangle(dst, r, cv::Scalar::all(160));
-	//}
+	{
+		for (auto & s : cactus_senses) {
+			cv::Rect r = hb::toRect(s);
+			std::sprintf(buffer, "%.2f", s.s);
+			cv::putText(dst, buffer, r.br(), cv::FONT_HERSHEY_COMPLEX, 0.4, cv::Scalar::all(128));
+			cv::rectangle(dst, r, cv::Scalar::all(255));
+		}
+
+		for (auto & s : birds_senses) {
+			cv::Rect r = hb::toRect(s);
+			std::sprintf(buffer, "%.2f", s.s);
+			cv::putText(dst, buffer, r.br(), cv::FONT_HERSHEY_COMPLEX, 0.4, cv::Scalar::all(128));
+			cv::rectangle(dst, r, cv::Scalar::all(196));
+		}
+		if (feel.is_game_over())
+			cv::bitwise_not(dst, dst);
+	}
+	{
+		cogn.i_recognize(hb::ObjectType::DINOSAUR, dinosaur_senses, delta_time);
+		cogn.i_recognize(hb::ObjectType::CACTUS  , cactus_senses, delta_time);
+		cogn.i_recognize(hb::ObjectType::BIRD    , birds_senses, delta_time);
+
+		int x, y;
+		cogn.i_am_at(x, y);
+		auto infos = cogn.then_i_know();
+		for (auto & info : infos) {
+			cv::Rect r = hb::toRect(info, x, y);
+			std::sprintf(buffer, "%u", info.id);
+			cv::putText(dst, buffer, r.tl(), cv::FONT_HERSHEY_COMPLEX, 1, cv::Scalar::all(255));
+			std::sprintf(buffer, "%.2f", info.speed_x);
+			cv::putText(dst, buffer, r.tl() + cv::Point(0, 16), cv::FONT_HERSHEY_COMPLEX, 0.5, cv::Scalar::all(225));
+			cv::rectangle(dst, r, cv::Scalar::all(196), 3);
+		}
+	}
 
 	if (show)
 		cv::imshow("new", dst);
@@ -54,9 +90,13 @@ static void recalc(bool show = true)
 
 LIBHEARTBEAT_API void hb::test(uint8_t const bgra32[], uint8_t rv[], size_t wid, size_t hgt)
 {
+	cm::Log::Switch(cm::Log::Type::ERR, cm::Log::State::FILE);
+	cm::Log::Switch(cm::Log::Type::DBG, cm::Log::State::FILE);
+	cm::Log::Switch(cm::Log::Type::MSG, cm::Log::State::FILE);
+
 	/**************** read file ****************/
 	if (bgra32 == nullptr) {
-		std::string filename = "2.bmp";
+		std::string filename = "s05.png";
 		src = cv::imread(filename, CV_LOAD_IMAGE_COLOR);
 		if(src.empty()) {
 			std::cout << "cannot read image file: " << filename << std::endl;
@@ -96,6 +136,7 @@ LIBHEARTBEAT_API void hb::test(uint8_t const bgra32[], uint8_t rv[], size_t wid,
 			});
 
 			recalc(false);
+
 			cv::imshow("new", dst);
 			cv::waitKey(0);
 

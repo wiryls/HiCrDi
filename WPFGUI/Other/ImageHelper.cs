@@ -14,10 +14,11 @@ namespace WPFGUI.Other
     {
         public static System.Drawing.Bitmap CaptureElement(FrameworkElement target)
         {
-            if(target == null)
+            if(target == null || !target.IsVisible)
                 return null;
 
             var rect = VisualTreeHelper.GetDescendantBounds(target);
+            
             Point screenPosition = target.PointToScreen(new Point(rect.X, rect.Y));
 
             var bmp = new System.Drawing.Bitmap(

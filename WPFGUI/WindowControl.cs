@@ -20,10 +20,13 @@ namespace WPFGUI
             if(isTesting) {
 
                 mutex.WaitOne();
-
+                
                 var bitmap = this.Dispatcher.Invoke(()=> {
                     return ImageHelper.CaptureElement(this.MainFrame);
                 });
+
+                if(bitmap == null)
+                    return;
 
                 BitmapSource bitmapSource = ImageHelper.Bitmap2BitmapSource(bitmap);
 

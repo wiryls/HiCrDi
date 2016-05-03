@@ -19,6 +19,7 @@ namespace WPFGUI
 
         private void Window_Close(object sender, RoutedEventArgs e)
         {
+            this.mainTimer.Close();
             Close();
             e.Handled = true;
             /* References:

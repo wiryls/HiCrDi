@@ -12,15 +12,18 @@
 #include <memory>
 #include <vector>
 
+#include "datatype.hpp"
+
 namespace cv {
 	class Mat;
-
 	template<typename _Tp> class Rect_;
 	typedef Rect_<int> Rect2i;
 	typedef Rect2i Rect;
 }
 
 namespace hb {
+	enum struct ObjectType;
+	struct Sense;
 	class Feel;
 }
 
@@ -31,14 +34,12 @@ class hb::Feel {
 
 public:
 
-	cv::Mat const &       oh_i_feel(cv::Mat const & view);
+	cv::Mat const & oh_i_feel(cv::Mat const & view);
 
-	cv::Rect              me()     const;
+	bool is_game_over()  const;
 
-	std::vector<cv::Rect> cactus() const;
+	std::vector<Sense> where_are(ObjectType type) const;
 
-	std::vector<cv::Rect> birds()  const;
-	
 public:
 
 	/**
@@ -58,6 +59,7 @@ public:
 	static int    MATCH_TH_DINOSAUR;
 	static int    MATCH_TH_CACTUS;
 	static int    MATCH_TH_BIRD;
+	static int    MATCH_TH_RESTART;
 
 private:
 

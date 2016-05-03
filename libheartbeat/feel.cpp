@@ -10,6 +10,7 @@
 
 #include <opencv2/opencv.hpp>
 
+#include "datatype.hpp"
 #include "Feel.hpp"
 
 /****************************************************************************
@@ -26,6 +27,7 @@ public:
 	cv::Mat me_tmpl;
 	cv::Mat bird_tmpl;
 	cv::Mat cactus_tmpl;
+	cv::Mat restart_tmpl;
 
 public:
 
@@ -38,16 +40,19 @@ public:
 	static int   & MATCH_TH_DINOSAUR;
 	static int   & MATCH_TH_CACTUS;
 	static int   & MATCH_TH_BIRD;
+	static int   & MATCH_TH_RESTART;
 
 public:
 
 	static void load_tmpl(bool & is_ok, cv::Mat & dst, char const path[], char const info[]);
 
-	static cv::Rect feel_one(cv::Mat const & src, cv::Mat const & tmpl, int threshold);
+	static bool feel_existence(cv::Mat const & src, cv::Mat const & tmpl, int threshold);
 
-	static void merge_neighbor(std::vector<cv::Rect> & rects, int delta_width, int delta_height);
+	static std::vector<Sense> feel_one(cv::Mat const & src, cv::Mat const & tmpl, int threshold);
 
-	static std::vector<cv::Rect> feel_multi(cv::Mat const & src, cv::Mat const & tmpl, int threshold);
+	static void merge_neighbor(std::vector<Sense> & rects, int delta_width, int delta_height);
+
+	static std::vector<Sense> feel_multi(cv::Mat const & src, cv::Mat const & tmpl, int threshold);
 
 } Private;
 
@@ -56,16 +61,18 @@ const int    Private::MATCH_METHOD           = cv::TM_CCOEFF_NORMED;
 // TODO:
 double hb::Feel::CONTRAST_ALPHA = 1.96;
 int    hb::Feel::BINARIZATION_THRESHOLD = 249;
-int    hb::Feel::MATCH_TH_DINOSAUR = 128;
-int    hb::Feel::MATCH_TH_CACTUS = 128;
+int    hb::Feel::MATCH_TH_DINOSAUR = 205;
+int    hb::Feel::MATCH_TH_CACTUS = 144;
 int    hb::Feel::MATCH_TH_BIRD = 196;
+int    hb::Feel::MATCH_TH_RESTART = 196;
 
 // TODO:
 double & Private::CONTRAST_ALPHA           = hb::Feel::CONTRAST_ALPHA;
 int    & Private::BINARIZATION_THRESHOLD   = hb::Feel::BINARIZATION_THRESHOLD;
 int    & Private::MATCH_TH_DINOSAUR        = hb::Feel::MATCH_TH_DINOSAUR;
-int    & Private::MATCH_TH_CACTUS           = hb::Feel::MATCH_TH_CACTUS;
+int    & Private::MATCH_TH_CACTUS          = hb::Feel::MATCH_TH_CACTUS;
 int    & Private::MATCH_TH_BIRD            = hb::Feel::MATCH_TH_BIRD;
+int    & Private::MATCH_TH_RESTART         = hb::Feel::MATCH_TH_RESTART;
 
 
 /****************************************************************************
@@ -88,31 +95,45 @@ void hb::Feel::Impl::load_tmpl
 	}
 }
 
-cv::Rect hb::Feel::Impl::feel_one(cv::Mat const & src, cv::Mat const & tmpl, int threshold)
+bool hb::Feel::Impl::feel_existence(cv::Mat const & src, cv::Mat const & tmpl, int threshold)
 {
-	if (tmpl.empty())
-		return cv::Rect();
+	if (src.empty() || tmpl.empty())
+		return false;
 
-	cv::Mat result;
-	cv::matchTemplate(src, tmpl, result, MATCH_METHOD);
+	cv::Mat score;
+	cv::matchTemplate(src, tmpl, score, MATCH_METHOD);
+	if (MATCH_METHOD == CV_TM_SQDIFF || MATCH_METHOD == CV_TM_SQDIFF_NORMED)
+		score.convertTo(score, -1, -1.0, 1.0);
+
+	double max;
+	cv::minMaxLoc(score, nullptr, &max, nullptr, nullptr);
+	return (max * 255.0 > threshold);
+}
+
+std::vector<hb::Sense> hb::Feel::Impl::feel_one(cv::Mat const & src, cv::Mat const & tmpl, int threshold)
+{
+	if (src.empty() || tmpl.empty())
+		return std::vector<Sense>();
+
+	cv::Mat score;
+	cv::matchTemplate(src, tmpl, score, MATCH_METHOD);
 
 	/* note:
 	 * "For SQDIFF and SQDIFF_NORMED, the best matches are lower values. 
 	 *  For all the other methods, the higher the better."
 	 */
 	if (MATCH_METHOD == CV_TM_SQDIFF || MATCH_METHOD == CV_TM_SQDIFF_NORMED)
-		result.convertTo(result, CV_8UC1, -255.0, 255.0);
-	else
-		result.convertTo(result, CV_8UC1, 255.0);
+		score.convertTo(score, -1, -1.0, 1.0);
 
+	/* find the only one matched */
 	double max;
 	cv::Point match;
-	cv::minMaxLoc(result, nullptr, &max, nullptr, &match);
+	cv::minMaxLoc(score, nullptr, &max, nullptr, &match);
 
-	if (max > threshold)
-		return cv::Rect(match.x, match.y, tmpl.cols, tmpl.rows);
+	if (max * 255.0 > threshold)
+		return std::vector<Sense>{ {match.x, match.y, tmpl.cols, tmpl.rows, float(max)}};
 	else
-		return cv::Rect();
+		return std::vector<Sense>();
 
 	/* References:
 	 * [Template Matching]
@@ -120,65 +141,76 @@ cv::Rect hb::Feel::Impl::feel_one(cv::Mat const & src, cv::Mat const & tmpl, int
 	 */
 }
 
-void hb::Feel::Impl::merge_neighbor(std::vector<cv::Rect>& rects, int delta_width, int delta_height)
+void hb::Feel::Impl::merge_neighbor(std::vector<Sense>& rects, int delta_width, int delta_height)
 {
 	size_t n = rects.size();
 	for (size_t i = 0U; i < n; i++) {
 		auto & lhs = rects[i];
-		int x    = lhs.x      -  delta_width;
-		int y    = lhs.y      -  delta_height;
-		int wid  = lhs.width  + (delta_width  << 1);
-		int hgt  = lhs.height + (delta_height << 1);
+		int x    = lhs.x -  delta_width;
+		int y    = lhs.y -  delta_height;
+		int wid  = lhs.w + (delta_width  << 1);
+		int hgt  = lhs.h + (delta_height << 1);
 		for (size_t j = i + 1U; j < n; j++) {
 			auto & rhs = rects[j];
-			int xmin = x          - rhs.width;
-			int ymin = y          - rhs.height;
-			int xmax = xmin + wid + rhs.width;
-			int ymax = ymin + hgt + rhs.height;
+			int xmin = x          - rhs.w;
+			int ymin = y          - rhs.h;
+			int xmax = xmin + wid + rhs.w;
+			int ymax = ymin + hgt + rhs.h;
 			if (xmin <= rhs.x && rhs.x <= xmax && ymin <= rhs.y && rhs.y <= ymax) {
 				int left   = std::min(lhs.x, rhs.x);
-				int right  = std::max(lhs.x + lhs.width, rhs.x + rhs.width);
+				int right  = std::max(lhs.x + lhs.w, rhs.x + rhs.w);
 				int top    = std::min(lhs.y, rhs.y);
-				int bottom = std::max(lhs.y + lhs.height, rhs.y + rhs.height);
+				int bottom = std::max(lhs.y + lhs.h, rhs.y + rhs.h);
 				lhs.x      = left;
 				lhs.y      = top;
-				lhs.height = bottom - top;
-				lhs.width  = right - left;
-				std::swap(rhs, rects[--n]);
+				lhs.h      = bottom - top;
+				lhs.w      = right - left;
+				lhs.s      = std::max(lhs.s, rhs.s); // TODO: is this ok?
+				if (j != --n)
+					std::swap(rects[n], rhs);
 				i = size_t(0U) - size_t(1U);	/* restart merging */
 			}
 		}
 	}
 
 	n = rects.size() - n;
-	while (n--)
+	while (n-- > 0U)
 		rects.pop_back();
 }
 
-std::vector<cv::Rect> hb::Feel::Impl::feel_multi(cv::Mat const & src, cv::Mat const & tmpl, int threshold)
+std::vector<hb::Sense> hb::Feel::Impl::feel_multi(cv::Mat const & src, cv::Mat const & tmpl, int threshold)
 {
-	if (tmpl.empty())
-		return std::vector<cv::Rect>();
+	if (src.empty() || tmpl.empty())
+		return std::vector<Sense>();
 
-	cv::Mat result;
-	cv::matchTemplate(src, tmpl, result, MATCH_METHOD);
+	cv::Mat score;
+	cv::matchTemplate(src, tmpl, score, MATCH_METHOD);
 
 	if (MATCH_METHOD == CV_TM_SQDIFF || MATCH_METHOD == CV_TM_SQDIFF_NORMED)
-		result.convertTo(result, CV_8UC1, -255.0, 255.0);
+		score.convertTo(score, CV_8UC1, -255.0, 255.0);
 	else
-		result.convertTo(result, CV_8UC1, 255.0);
+		score.convertTo(score, CV_8UC1, 255.0);
 
+	cv::Mat mask;
+	cv::threshold(score, mask, threshold, 255, CV_THRESH_BINARY);
 
-	cv::threshold(result, result, threshold, 255, CV_THRESH_BINARY);
-
-	std::vector<cv::Rect> rv;
-	for (auto iter = result.datastart; iter != result.dataend; iter++) {
+	std::vector<Sense> rv;
+	for (auto iter = mask.datastart; iter != mask.dataend; iter++) {
 		if (*iter == 255) {
-			int i = (iter - result.datastart);
-			int x = i % result.cols;
-			int y = i / result.cols;
-			cv::floodFill(result, cv::Point(x, y), cv::Scalar::all(0));
-			rv.emplace_back(x, y, tmpl.cols, tmpl.rows);
+			int i = (iter - mask.datastart);
+			int x = i % mask.cols;
+			int y = i / mask.cols;
+
+			/* fill the hole for search next */
+			cv::Rect r;
+			cv::floodFill(mask, cv::Point(x, y), cv::Scalar::all(0), &r);
+
+			/* get the max score */
+			double max;
+			cv::Point match;
+			cv::Mat roi = score(r);
+			cv::minMaxLoc(roi, nullptr, &max, nullptr, &match);
+			rv.push_back({x + match.x, y + match.y, tmpl.cols, tmpl.rows, float(max) / 255.f});
 		}
 	}
 
@@ -221,33 +253,41 @@ cv::Mat const & hb::Feel::oh_i_feel(cv::Mat const & src)
 	 */
 }
 
-cv::Rect hb::Feel::me() const
+bool hb::Feel::is_game_over() const
 {
 	auto & i = *impl;
 	if (!i.is_ready)
-		return cv::Rect();
+		return false;
 
-	return Private::feel_one(i.view, i.me_tmpl, Private::MATCH_TH_DINOSAUR);
+	return Private::feel_existence(i.view, i.restart_tmpl, Private::MATCH_TH_RESTART);
 }
 
-std::vector<cv::Rect> hb::Feel::cactus() const
+std::vector<hb::Sense> hb::Feel::where_are(ObjectType type) const
 {
 	auto & i = *impl;
 	if (!i.is_ready)
-		return std::vector<cv::Rect>();
+		return std::vector<Sense>();
 
-	auto rv = Private::feel_multi(i.view, i.cactus_tmpl, Private::MATCH_TH_CACTUS);
-	Private::merge_neighbor(rv, 16, 0);
+	std::vector<Sense> rv;
+
+	switch (type)
+	{
+	case hb::ObjectType::DINOSAUR:
+		rv = Private::feel_one(i.view, i.me_tmpl, Private::MATCH_TH_DINOSAUR);
+		break;
+	case hb::ObjectType::CACTUS:
+		rv = Private::feel_multi(i.view, i.cactus_tmpl, Private::MATCH_TH_CACTUS);
+		Private::merge_neighbor(rv, 16, 0);
+		break;
+	case hb::ObjectType::BIRD:
+		rv = Private::feel_multi(i.view, i.bird_tmpl, Private::MATCH_TH_BIRD);
+		break;
+	default:
+		return std::vector<Sense>();
+		break;
+	}
+
 	return rv;
-}
-
-std::vector<cv::Rect> hb::Feel::birds() const
-{
-	auto & i = *impl;
-	if (!i.is_ready)
-		return std::vector<cv::Rect>();
-
-	return Private::feel_multi(i.view, i.bird_tmpl, Private::MATCH_TH_BIRD);
 }
 
 /****************************************************************************
@@ -260,9 +300,10 @@ hb::Feel::Feel()
 	auto & i = *impl;
 
 	i.is_ready = true;
-	Private::load_tmpl(i.is_ready, i.    me_tmpl, "di.bmp", "me"    );
-	Private::load_tmpl(i.is_ready, i.  bird_tmpl, "bi.bmp", "birds" );
-	Private::load_tmpl(i.is_ready, i.cactus_tmpl, "ob.bmp", "cactus");
+	Private::load_tmpl(i.is_ready, i.     me_tmpl, "di.bmp", "me"    );
+	Private::load_tmpl(i.is_ready, i.   bird_tmpl, "bi.bmp", "birds" );
+	Private::load_tmpl(i.is_ready, i. cactus_tmpl, "ob.bmp", "cactus");
+	Private::load_tmpl(i.is_ready, i.restart_tmpl, "go.bmp", "restart");
 }
 
 hb::Feel::~Feel() {}

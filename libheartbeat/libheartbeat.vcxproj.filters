@@ -27,6 +27,18 @@
     <ClInclude Include="feel.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="cogn.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="datatype.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="timer.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="log.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libheartbeat.cpp">
@@ -39,6 +51,18 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="feel.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cogn.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="datatype.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="timer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="log.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
