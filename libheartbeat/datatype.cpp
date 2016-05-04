@@ -20,17 +20,6 @@ cv::Rect hb::toRect(Sense const & src)
 	return cv::Rect(src.x, src.y, src.w, src.h);
 }
 
-cv::Rect hb::toRect(Object const & src)
-{
-	return cv::Rect
-	(
-		static_cast<int>(src.x_mid - (src.wid * 0.5f)),
-		static_cast<int>(src.y_mid - (src.hgt * 0.5f)),
-		static_cast<int>(src.wid),
-		static_cast<int>(src.hgt)
-	);
-}
-
 cv::Rect hb::toRect(Info const & src, int x0, int y0)
 {
 	return cv::Rect

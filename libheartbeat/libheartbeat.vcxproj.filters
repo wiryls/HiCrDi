@@ -39,6 +39,9 @@
     <ClInclude Include="log.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="algorithm.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libheartbeat.cpp">
@@ -63,6 +66,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="log.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="algorithm.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

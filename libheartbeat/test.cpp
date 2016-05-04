@@ -119,19 +119,19 @@ LIBHEARTBEAT_API void hb::test(uint8_t const bgra32[], uint8_t rv[], size_t wid,
 				recalc();
 			});
 
-			cv::createTrackbar("th", wname, &feel.BINARIZATION_THRESHOLD, 255, [](int, void*) {
+			cv::createTrackbar("th", wname, &(int)feel.BINARIZATION_THRESHOLD, 255, [](int, void*) {
 				recalc();
 			});
 
-			cv::createTrackbar("di_th", wname, &feel.MATCH_TH_DINOSAUR, 255, [](int, void*) {
+			cv::createTrackbar("di_th", wname, &(int)feel.MATCH_TH_DINOSAUR, 255, [](int, void*) {
 				recalc();
 			});
 
-			cv::createTrackbar("ob_th", wname, &feel.MATCH_TH_CACTUS, 255, [](int, void*) {
+			cv::createTrackbar("ob_th", wname, &(int)feel.MATCH_TH_CACTUS, 255, [](int, void*) {
 				recalc();
 			});
 
-			cv::createTrackbar("bi_th", wname, &feel.MATCH_TH_BIRD, 255, [](int, void*) {
+			cv::createTrackbar("bi_th", wname, &(int)feel.MATCH_TH_BIRD, 255, [](int, void*) {
 				recalc();
 			});
 

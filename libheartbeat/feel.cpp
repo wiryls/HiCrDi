@@ -10,6 +10,7 @@
 
 #include <opencv2/opencv.hpp>
 
+#include "log.hpp"
 #include "datatype.hpp"
 #include "Feel.hpp"
 
@@ -35,15 +36,6 @@ public:
 
 public:
 
-	static double& CONTRAST_ALPHA;
-	static int   & BINARIZATION_THRESHOLD;
-	static int   & MATCH_TH_DINOSAUR;
-	static int   & MATCH_TH_CACTUS;
-	static int   & MATCH_TH_BIRD;
-	static int   & MATCH_TH_RESTART;
-
-public:
-
 	static void load_tmpl(bool & is_ok, cv::Mat & dst, char const path[], char const info[]);
 
 	static bool feel_existence(cv::Mat const & src, cv::Mat const & tmpl, int threshold);
@@ -57,23 +49,6 @@ public:
 } Private;
 
 const int    Private::MATCH_METHOD           = cv::TM_CCOEFF_NORMED;
-
-// TODO:
-double hb::Feel::CONTRAST_ALPHA = 1.96;
-int    hb::Feel::BINARIZATION_THRESHOLD = 249;
-int    hb::Feel::MATCH_TH_DINOSAUR = 205;
-int    hb::Feel::MATCH_TH_CACTUS = 144;
-int    hb::Feel::MATCH_TH_BIRD = 196;
-int    hb::Feel::MATCH_TH_RESTART = 196;
-
-// TODO:
-double & Private::CONTRAST_ALPHA           = hb::Feel::CONTRAST_ALPHA;
-int    & Private::BINARIZATION_THRESHOLD   = hb::Feel::BINARIZATION_THRESHOLD;
-int    & Private::MATCH_TH_DINOSAUR        = hb::Feel::MATCH_TH_DINOSAUR;
-int    & Private::MATCH_TH_CACTUS          = hb::Feel::MATCH_TH_CACTUS;
-int    & Private::MATCH_TH_BIRD            = hb::Feel::MATCH_TH_BIRD;
-int    & Private::MATCH_TH_RESTART         = hb::Feel::MATCH_TH_RESTART;
-
 
 /****************************************************************************
  *	private method
@@ -89,8 +64,7 @@ void hb::Feel::Impl::load_tmpl
 {
 	dst = cv::imread(path, CV_LOAD_IMAGE_GRAYSCALE);
 	if (dst.empty()) {
-		// TODO: Logging...
-		std::cout << "I cannot see " << info << "!\n";
+		Log::Err("load_tmpl::I cannot see ", info);
 		is_ok = false;
 	}
 }
@@ -229,14 +203,14 @@ cv::Mat const & hb::Feel::oh_i_feel(cv::Mat const & src)
 	cv::cvtColor(src, dst, cv::COLOR_BGR2GRAY);
 
 	/* [2]contrast     --- highlight foreground */
-	dst.convertTo(dst, -1, Private::CONTRAST_ALPHA, 0.0);
+	dst.convertTo(dst, -1, CONTRAST_ALPHA, 0.0);
 
 	/* [3]equalization --- increase the color discrimination */
 	cv::equalizeHist(dst, dst);
 
 	/* [4]binarization --- remove background */
 	bool is_inv = (float)cv::countNonZero(dst) > dst.total() * 0.666f;
-	cv::threshold(dst, dst, Private::BINARIZATION_THRESHOLD, 255.0, (is_inv ? CV_THRESH_BINARY_INV : CV_THRESH_BINARY));
+	cv::threshold(dst, dst, BINARIZATION_THRESHOLD, 255.0, (is_inv ? CV_THRESH_BINARY_INV : CV_THRESH_BINARY));
 
 	if ((float)cv::countNonZero(dst) > dst.total() * 0.5f)
 		cv::bitwise_not(dst, dst);
@@ -259,7 +233,7 @@ bool hb::Feel::is_game_over() const
 	if (!i.is_ready)
 		return false;
 
-	return Private::feel_existence(i.view, i.restart_tmpl, Private::MATCH_TH_RESTART);
+	return Private::feel_existence(i.view, i.restart_tmpl, MATCH_TH_RESTART);
 }
 
 std::vector<hb::Sense> hb::Feel::where_are(ObjectType type) const
@@ -269,21 +243,20 @@ std::vector<hb::Sense> hb::Feel::where_are(ObjectType type) const
 		return std::vector<Sense>();
 
 	std::vector<Sense> rv;
-
+	
 	switch (type)
 	{
 	case hb::ObjectType::DINOSAUR:
-		rv = Private::feel_one(i.view, i.me_tmpl, Private::MATCH_TH_DINOSAUR);
+		rv = Private::feel_one(i.view, i.me_tmpl, MATCH_TH_DINOSAUR);
 		break;
 	case hb::ObjectType::CACTUS:
-		rv = Private::feel_multi(i.view, i.cactus_tmpl, Private::MATCH_TH_CACTUS);
+		rv = Private::feel_multi(i.view, i.cactus_tmpl, MATCH_TH_CACTUS);
 		Private::merge_neighbor(rv, 16, 0);
 		break;
 	case hb::ObjectType::BIRD:
-		rv = Private::feel_multi(i.view, i.bird_tmpl, Private::MATCH_TH_BIRD);
+		rv = Private::feel_multi(i.view, i.bird_tmpl, MATCH_TH_BIRD);
 		break;
 	default:
-		return std::vector<Sense>();
 		break;
 	}
 
@@ -295,7 +268,7 @@ std::vector<hb::Sense> hb::Feel::where_are(ObjectType type) const
  ***************************************************************************/
 
 hb::Feel::Feel()
-	: impl(std::make_unique<Impl>()) 
+	: impl(std::make_unique<Impl>())
 {
 	auto & i = *impl;
 
@@ -307,3 +280,4 @@ hb::Feel::Feel()
 }
 
 hb::Feel::~Feel() {}
+

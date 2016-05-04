@@ -18,14 +18,16 @@ namespace cv {
 namespace hb {
 	enum struct ObjectType;
 	struct Sense;
-	struct Object;
 	struct Info;
 }
 
 namespace hb {
 	extern cv::Rect toRect(Sense  const & src);
-	extern cv::Rect toRect(Object const & src);
 	extern cv::Rect toRect(Info   const & src, int x0, int y0);
+}
+
+namespace hb {
+	template<typename T> class RangedValue;
 }
 
 /****************************************************************************
@@ -55,24 +57,6 @@ struct hb::Sense
 	float s;
 };
 
-
-/**
- *	\brief	TODO:
- */
-struct hb::Object
-{
-	float  x_mid;
-	float  y_mid;
-	float  wid;
-	float  hgt;
-	float  spd_x;
-	float  spd_y;
-	size_t frame;
-	float  score;
-	size_t id;
-};
-
-
 /**
  *	\brief	TODO:
  */
@@ -86,3 +70,57 @@ struct hb::Info
 	float speed_y;
 	size_t id;
 };
+
+/****************************************************************************
+ *	
+ ***************************************************************************/
+
+template<typename T> class hb::RangedValue
+{
+public:
+	RangedValue(T const & min, T const & max, T const & val = T());
+	T & operator = (T const & rhs);
+	operator T &();
+	operator T const &() const;
+
+private:
+	T val;
+	T val_min;
+	T val_max;
+};
+
+
+template<typename T> inline hb::RangedValue<T>::
+RangedValue(T const & min, T const & max, T const & val)
+	: val_min(min)
+	, val_max(max)
+	, val(val)
+{
+	if (min > max)
+		throw std::invalid_argument("`min` > `max`");
+	*this = val;
+}
+
+template<typename T> inline T & hb::RangedValue<T>::
+operator=(T const & rhs)
+{
+	if (rhs < val_min)
+		val = val_min;
+	else if (val_max < rhs)
+		val = val_max;
+	else
+		val = rhs;
+	return *this;
+}
+
+template<typename T> inline hb::RangedValue<T>::
+operator T&()
+{
+	return val;
+}
+
+template<typename T> inline hb::RangedValue<T>::
+operator T const&() const
+{
+	return val;
+}

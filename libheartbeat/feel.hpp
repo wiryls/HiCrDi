@@ -51,15 +51,15 @@ public:
 	 *	\brief destructor
 	 */
 	~Feel();
-
+	 
 public:
 
-	static double CONTRAST_ALPHA;
-	static int    BINARIZATION_THRESHOLD;
-	static int    MATCH_TH_DINOSAUR;
-	static int    MATCH_TH_CACTUS;
-	static int    MATCH_TH_BIRD;
-	static int    MATCH_TH_RESTART;
+	RangedValue<double> CONTRAST_ALPHA			= RangedValue<double>(0.0, 3.0, 1.96);
+	RangedValue<int>	BINARIZATION_THRESHOLD	= RangedValue<int>   (  0, 255, 249);
+	RangedValue<int>	MATCH_TH_DINOSAUR		= RangedValue<int>   (  0, 255, 205);
+	RangedValue<int>	MATCH_TH_CACTUS			= RangedValue<int>   (  0, 255, 144);
+	RangedValue<int>	MATCH_TH_BIRD			= RangedValue<int>   (  0, 255, 196);
+	RangedValue<int>	MATCH_TH_RESTART		= RangedValue<int>   (  0, 255, 196);
 
 private:
 

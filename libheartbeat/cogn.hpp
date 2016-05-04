@@ -12,6 +12,8 @@
 #include <memory>
 #include <vector>
 
+#include "datatype.hpp"
+
 namespace hb {
 	enum struct ObjectType;
 	struct Sense;
@@ -45,12 +47,16 @@ public:
 	 */
 	~Cogn();
 
+public:
+
+	RangedValue<float> INITIAL_THRESHOLD = RangedValue<float>(0.f, 1.f, 0.4f);
+	RangedValue<float> MINIMUM_THRESHOLD = RangedValue<float>(0.f, 1.f, 0.15f);
+	RangedValue<float> SCORE_THRESHOLD   = RangedValue<float>(0.f, 1.f, 0.5f);
+	RangedValue<float> SCORE_DECAY		 = RangedValue<float>(0.f, 1.f, 0.6f);
+
 private:
 
 	struct Impl;
 	std::unique_ptr<Impl> impl;
 };
 
-/****************************************************************************
- *	nested
- ***************************************************************************/
