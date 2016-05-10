@@ -13,68 +13,98 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{65af6621-1b6c-4d73-a1a1-8ebf6eaec7ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="impl">
+      <UniqueIdentifier>{353584b0-d802-4fd2-8fbb-ea6532ff866c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{112fabbc-492c-4677-b858-ed7c2f8cac3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utility">
+      <UniqueIdentifier>{815d25fe-bc29-4f5d-918b-0e7dda64c34f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="libheartbeat.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libheartbeat.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="heart.hpp">
-      <Filter>头文件</Filter>
+    <ClInclude Include="impl\cvfeel.hpp">
+      <Filter>impl</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="impl\datatype.hpp">
+      <Filter>impl</Filter>
     </ClInclude>
-    <ClInclude Include="feel.hpp">
-      <Filter>头文件</Filter>
+    <ClInclude Include="impl\kmcogn.hpp">
+      <Filter>impl</Filter>
     </ClInclude>
-    <ClInclude Include="cogn.hpp">
-      <Filter>头文件</Filter>
+    <ClInclude Include="core\ibeat.hpp">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="datatype.hpp">
-      <Filter>头文件</Filter>
+    <ClInclude Include="core\icogn.hpp">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="timer.hpp">
-      <Filter>头文件</Filter>
+    <ClInclude Include="core\ifeel.hpp">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="log.hpp">
-      <Filter>头文件</Filter>
+    <ClInclude Include="core\imind.hpp">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="algorithm.hpp">
-      <Filter>头文件</Filter>
+    <ClInclude Include="utility\algorithm.hpp">
+      <Filter>utility</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\log.hpp">
+      <Filter>utility</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\timer.hpp">
+      <Filter>utility</Filter>
+    </ClInclude>
+    <ClInclude Include="impl\qlmind.hpp">
+      <Filter>impl</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\types.hpp">
+      <Filter>utility</Filter>
+    </ClInclude>
+    <ClInclude Include="core\heart.hpp">
+      <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libheartbeat.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="heart.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="utility\log.cpp">
+      <Filter>utility</Filter>
     </ClCompile>
-    <ClCompile Include="test.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="utility\algorithm.cpp">
+      <Filter>utility</Filter>
     </ClCompile>
-    <ClCompile Include="feel.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="utility\timer.cpp">
+      <Filter>utility</Filter>
     </ClCompile>
-    <ClCompile Include="cogn.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="test\test.cpp">
+      <Filter>test</Filter>
     </ClCompile>
-    <ClCompile Include="datatype.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="impl\cvfeel.cpp">
+      <Filter>impl</Filter>
     </ClCompile>
-    <ClCompile Include="timer.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="impl\kmcogn.cpp">
+      <Filter>impl</Filter>
     </ClCompile>
-    <ClCompile Include="log.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="impl\datatype.cpp">
+      <Filter>impl</Filter>
     </ClCompile>
-    <ClCompile Include="algorithm.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="impl\qlmind.cpp">
+      <Filter>impl</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="libheartbeat.rc">
-      <Filter>资源文件</Filter>
-    </ResourceCompile>
+    <ClCompile Include="core\heart.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

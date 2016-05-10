@@ -9,24 +9,27 @@
  *********************************************************************/ 
 
 /* headers */
+#define _CRT_SECURE_NO_WARNINGS
 #include <sstream>
 #include <iostream>
 #include <string>
 
 #include <opencv2/opencv.hpp>
 
-#include "log.hpp"
-#include "timer.hpp"
-#include "feel.hpp"
-#include "cogn.hpp"
-#include "libheartbeat.hpp"
+#include "../utility/log.hpp"
+#include "../utility/timer.hpp"
+#include "../impl/cvfeel.hpp"
+#include "../impl/kmcogn.hpp"
+#include "../impl/qlmind.hpp"
+#include "../libheartbeat.hpp"
 
 /* function */
 
 cm::Timer timer;
 cv::Mat src, dst;
-hb::Feel feel;
-hb::Cogn cogn;
+hb::CvFeel feel;
+hb::KmCogn cogn;
+hb::QlMind mind;
 char const wname[] = "test";
 
 static void recalc(bool show = true) 
@@ -36,13 +39,21 @@ static void recalc(bool show = true)
 		delta_time = 0.001f;
 	timer.start();
 
-	dst = feel.oh_i_feel(src);
+	hb::View view{src, delta_time};
+
+	hb::Sense sense;
+	hb::Info info;
+	hb::Action action;
+
+	feel << view  >> sense;
+	cogn << sense >> info;
+	mind << info  >> action;
+
 	char buffer[11];
-	auto dinosaur_senses = feel.where_are(hb::ObjectType::DINOSAUR);
-	auto cactus_senses = feel.where_are(hb::ObjectType::CACTUS);
-	auto birds_senses = feel.where_are(hb::ObjectType::BIRD);
 	{
-		for (auto & s : dinosaur_senses) {
+		dst = sense.debug_view.clone();
+
+		for (auto & s : sense.dinosaurs) {
 			cv::Rect r = hb::toRect(s);
 			std::sprintf(buffer, "%.2f", s.s);
 			cv::putText(dst, buffer, r.br(), cv::FONT_HERSHEY_COMPLEX, 0.4, cv::Scalar::all(128));
@@ -50,37 +61,43 @@ static void recalc(bool show = true)
 		}
 	}
 	{
-		for (auto & s : cactus_senses) {
+		for (auto & s : sense.cactus) {
 			cv::Rect r = hb::toRect(s);
 			std::sprintf(buffer, "%.2f", s.s);
 			cv::putText(dst, buffer, r.br(), cv::FONT_HERSHEY_COMPLEX, 0.4, cv::Scalar::all(128));
 			cv::rectangle(dst, r, cv::Scalar::all(255));
 		}
 
-		for (auto & s : birds_senses) {
+		for (auto & s : sense.birds) {
 			cv::Rect r = hb::toRect(s);
 			std::sprintf(buffer, "%.2f", s.s);
 			cv::putText(dst, buffer, r.br(), cv::FONT_HERSHEY_COMPLEX, 0.4, cv::Scalar::all(128));
 			cv::rectangle(dst, r, cv::Scalar::all(196));
 		}
-		if (feel.is_game_over())
+
+		if (sense.is_dead)
 			cv::bitwise_not(dst, dst);
 	}
-	{
-		cogn.i_recognize(hb::ObjectType::DINOSAUR, dinosaur_senses, delta_time);
-		cogn.i_recognize(hb::ObjectType::CACTUS  , cactus_senses, delta_time);
-		cogn.i_recognize(hb::ObjectType::BIRD    , birds_senses, delta_time);
 
-		int x, y;
-		cogn.i_am_at(x, y);
-		auto infos = cogn.then_i_know();
-		for (auto & info : infos) {
-			cv::Rect r = hb::toRect(info, x, y);
-			std::sprintf(buffer, "%u", info.id);
+	{
+		for (auto & i : info.objs) {
+			cv::Rect r = hb::toRect(i, info.x0, info.y0);
+			std::sprintf(buffer, "%u", i.id);
 			cv::putText(dst, buffer, r.tl(), cv::FONT_HERSHEY_COMPLEX, 1, cv::Scalar::all(255));
-			std::sprintf(buffer, "%.2f", info.speed_x);
+			std::sprintf(buffer, "%.2f", i.speed_x);
 			cv::putText(dst, buffer, r.tl() + cv::Point(0, 16), cv::FONT_HERSHEY_COMPLEX, 0.5, cv::Scalar::all(225));
 			cv::rectangle(dst, r, cv::Scalar::all(196), 3);
+
+			if (i.id == 10) {
+				Log::Msg(
+					"dx: ", int(i.delta_x), "\t", 
+					"dy: ", int(i.delta_y), "\t", 
+					"rw: ", int(i.relative_width), "\t",
+					"rh: ", int(i.relative_height), "\t",
+					"sx: ", int(i.speed_x), "\t",
+					"sy: ", int(i.speed_y), "\t"
+					);
+			}
 		}
 	}
 
@@ -118,19 +135,15 @@ LIBHEARTBEAT_API void hb::test(uint8_t const bgra32[], uint8_t rv[], size_t wid,
 				feel.CONTRAST_ALPHA = float(v) / 100;
 				recalc();
 			});
-
 			cv::createTrackbar("th", wname, &(int)feel.BINARIZATION_THRESHOLD, 255, [](int, void*) {
 				recalc();
 			});
-
 			cv::createTrackbar("di_th", wname, &(int)feel.MATCH_TH_DINOSAUR, 255, [](int, void*) {
 				recalc();
 			});
-
 			cv::createTrackbar("ob_th", wname, &(int)feel.MATCH_TH_CACTUS, 255, [](int, void*) {
 				recalc();
 			});
-
 			cv::createTrackbar("bi_th", wname, &(int)feel.MATCH_TH_BIRD, 255, [](int, void*) {
 				recalc();
 			});

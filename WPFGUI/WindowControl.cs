@@ -10,29 +10,24 @@ namespace WPFGUI
 {
     public partial class MainWindow : Window
     {
-        static int i = 0;
         private void ProcessFrame(object source, ElapsedEventArgs e)
         {
-            // TODO:
-            if(i++ % 7 == 7)
-                this.action.Jump();
+            mutex.WaitOne();
+
+            var bitmap = this.Dispatcher.Invoke(()=> {
+                return ImageHelper.CaptureElement(this.MainFrame);
+            });
+            if(bitmap == null)
+                return;
+
+            BitmapSource bitmapSource = ImageHelper.Bitmap2BitmapSource(bitmap);
+            var tmp = new IntermediateImage(bitmapSource);
+            var ok = libheartbeat.i_see(heart, tmp.ImagePixels, (uint)tmp.Info.Width, (uint)tmp.Info.Height);
 
             if(isTesting) {
+                // libheartbeat.test(tmp.ImagePixels, tmp.ImagePixels, (uint)tmp.Info.Width, (uint)tmp.Info.Height);
 
-                mutex.WaitOne();
-                
-                var bitmap = this.Dispatcher.Invoke(()=> {
-                    return ImageHelper.CaptureElement(this.MainFrame);
-                });
-
-                if(bitmap == null)
-                    return;
-
-                BitmapSource bitmapSource = ImageHelper.Bitmap2BitmapSource(bitmap);
-
-                // TODO: 
-                var tmp = new IntermediateImage(bitmapSource);
-                libheartbeat.test(tmp.ImagePixels, tmp.ImagePixels, (uint)tmp.Info.Width, (uint)tmp.Info.Height);
+                libheartbeat.i_know(heart, tmp.ImagePixels, (uint)tmp.Info.Width, (uint)tmp.Info.Height);
                 bitmapSource = tmp.ToBitmapSource();
 
                 if(isTesting) {
@@ -41,8 +36,28 @@ namespace WPFGUI
                         this.DebugOutput.Source = img
                     ), bitmapSource);
                 }
+            }
 
-                mutex.ReleaseMutex();
+            if(isHitting != (ok == 1)) {
+                isHitting = (ok == 1);
+                this.Dispatcher.Invoke(() => { UpdateBorderEffect(); });
+            }
+
+            mutex.ReleaseMutex();
+
+            var act = libheartbeat.i_decide(heart);
+            if(act == 0) {
+                this.action.Idel();
+            } else if(act == 1) {
+                this.action.Jump();
+            } else if(act == 2) {
+                this.action.Down();
+            }
+
+            if (libheartbeat.am_i_dead(heart) == 1) {
+                libheartbeat.i_rest(heart);
+                libheartbeat.i_continue(heart);
+                this.action.Jump();
             }
 
             //{
@@ -99,6 +114,7 @@ namespace WPFGUI
              */
         }
 
+        private IntPtr heart;
 
         private ActionHelper action = new ActionHelper();
 

@@ -11,15 +11,45 @@ namespace WPFGUI.Other
     {
         public void Jump()
         {
-            if (!isSpacePressed)
-                KeyboardSimulator.Press(Key.Space);
-            else
-                KeyboardSimulator.Release(Key.Space);
+            if (isDownPressed) {
+                KeyboardSimulator.Release(Key.Down);
+                isDownPressed = false;
+            }
 
-            isSpacePressed = !isSpacePressed;
+            if (!isSpacePressed) {
+                KeyboardSimulator.Press(Key.Space);
+                isSpacePressed = true;
+            }
+        }
+
+        public void Down()
+        {
+            if(isSpacePressed) {
+                KeyboardSimulator.Release(Key.Space);
+                isSpacePressed = false;
+            }
+
+            if(!isDownPressed) {
+                KeyboardSimulator.Press(Key.Down);
+                isDownPressed = true;
+            }
+        }
+
+        public void Idel()
+        {
+            if(isDownPressed) {
+                KeyboardSimulator.Release(Key.Down);
+                isDownPressed = false;
+            }
+
+            if(isSpacePressed) {
+                KeyboardSimulator.Release(Key.Space);
+                isSpacePressed = false;
+            }
         }
 
         private bool isSpacePressed = false;
+        private bool isDownPressed = false;
     }
 
 

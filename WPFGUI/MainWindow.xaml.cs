@@ -15,10 +15,15 @@ namespace WPFGUI
             this.View.DataContext = this;
             this.IsTesting = true;
             this.mainTimer.Elapsed += new ElapsedEventHandler(ProcessFrame);
+
+            heart = Other.libheartbeat.i_come();
+            Other.libheartbeat.i_start(heart);
+            Other.libheartbeat.i_rest(heart);
         }
 
         private void Window_Close(object sender, RoutedEventArgs e)
         {
+            Other.libheartbeat.i_sleep(heart);
             this.mainTimer.Close();
             Close();
             e.Handled = true;

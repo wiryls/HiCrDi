@@ -57,16 +57,15 @@ kuhn_munkres
 {
 	size_t n = fst_array.size();
 	size_t m = snd_array.size();
-	std::vector<float> weight(n * m);
 	result_t rv;
-	
-	{	/* get weight table */
+
+	{	/* use kuhn_munkres to match */
+		/* get weight table */
+		std::vector<float> weight(n * m);
 		for (size_t i = 0U; i < n; i++)
 			for (size_t j = 0U; j < m; j++)
 				weight[i * m + j] = evaluate(fst_array[i], snd_array[j]);
-	}
 
-	{	/* use kuhn_munkres to match */
 		/*
 		 *	wgt, sample:
 		 *	-- F0 F1 F2 Fn

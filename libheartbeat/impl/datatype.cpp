@@ -8,24 +8,24 @@
  *
  *********************************************************************/
 
-#include <opencv2/opencv.hpp>
+#include <opencv2/core/types.hpp>
 #include "datatype.hpp"
 
 /****************************************************************************
  *	implement
  ***************************************************************************/
 
-cv::Rect hb::toRect(Sense const & src)
+cv::Rect hb::toRect(Sense::Obj const & src)
 {
 	return cv::Rect(src.x, src.y, src.w, src.h);
 }
 
-cv::Rect hb::toRect(Info const & src, int x0, int y0)
+cv::Rect hb::toRect(Info::Obj const & src, float x0, float y0)
 {
 	return cv::Rect
 	(
-		x0 + static_cast<int>(src.delta_x - (src.relative_width  * 0.5f)),
-		y0 + static_cast<int>(src.delta_y - (src.relative_height * 0.5f)),
+		static_cast<int>(x0 + src.delta_x - src.relative_width * 0.5f),
+		static_cast<int>(y0 + src.delta_y - src.relative_height * 0.5f),
 		static_cast<int>(src.relative_width),
 		static_cast<int>(src.relative_height)
 	);

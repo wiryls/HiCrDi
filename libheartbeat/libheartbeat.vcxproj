@@ -152,29 +152,35 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="algorithm.hpp" />
-    <ClInclude Include="cogn.hpp" />
-    <ClInclude Include="feel.hpp" />
-    <ClInclude Include="heart.hpp" />
-    <ClInclude Include="libheartbeat.hpp" />
-    <ClInclude Include="log.hpp" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="datatype.hpp" />
-    <ClInclude Include="timer.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="algorithm.cpp" />
-    <ClCompile Include="cogn.cpp" />
-    <ClCompile Include="datatype.cpp" />
-    <ClCompile Include="feel.cpp" />
-    <ClCompile Include="heart.cpp" />
-    <ClCompile Include="libheartbeat.cpp" />
-    <ClCompile Include="log.cpp" />
-    <ClCompile Include="test.cpp" />
-    <ClCompile Include="timer.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="libheartbeat.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="core\heart.hpp" />
+    <ClInclude Include="core\ibeat.hpp" />
+    <ClInclude Include="core\icogn.hpp" />
+    <ClInclude Include="core\ifeel.hpp" />
+    <ClInclude Include="core\imind.hpp" />
+    <ClInclude Include="impl\cvfeel.hpp" />
+    <ClInclude Include="impl\datatype.hpp" />
+    <ClInclude Include="impl\kmcogn.hpp" />
+    <ClInclude Include="impl\qlmind.hpp" />
+    <ClInclude Include="libheartbeat.hpp" />
+    <ClInclude Include="utility\algorithm.hpp" />
+    <ClInclude Include="utility\log.hpp" />
+    <ClInclude Include="utility\types.hpp" />
+    <ClInclude Include="utility\timer.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="core\heart.cpp" />
+    <ClCompile Include="impl\cvfeel.cpp" />
+    <ClCompile Include="impl\datatype.cpp" />
+    <ClCompile Include="impl\kmcogn.cpp" />
+    <ClCompile Include="impl\qlmind.cpp" />
+    <ClCompile Include="libheartbeat.cpp" />
+    <ClCompile Include="test\test.cpp" />
+    <ClCompile Include="utility\algorithm.cpp" />
+    <ClCompile Include="utility\log.cpp" />
+    <ClCompile Include="utility\timer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

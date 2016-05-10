@@ -19,8 +19,12 @@ namespace WPFGUI
                 if(this.isRunning != value) {
                     this.isRunning = value;
                     this.mainTimer.Enabled = this.isRunning;
-                    if(!this.isRunning)
+                    if(!this.isRunning) {
                         this.isHitting = false;
+                        Other.libheartbeat.i_rest(heart);
+                    } else {
+                        Other.libheartbeat.i_continue(heart);
+                    }
                     this.UpdateBorderEffect();
                     OnPropertyChanged("IsRunning");
                 }

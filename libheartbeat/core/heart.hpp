@@ -1,5 +1,5 @@
 ﻿/*********************************************************************
- *	@file		Mind.hpp
+ *	@file		Heart.hpp
  *	@brief		
  *
  *
@@ -12,34 +12,46 @@
 #include <memory>
 
 namespace hb {
-	class Mind;
+	class Heart;
 }
 
 /**
- *	\brief	TODO:
+ *	\brief	A beating Heart
  */
-class hb::Mind {
+class hb::Heart
+{
 
 public:
 
+	void start();
+
+	void pause();
+
+	void resume();
+
+	void stop();
 
 public:
 
+	bool view(uint8_t const bgra32[], size_t wid, size_t hgt);
+
+	void know(uint8_t       bgra32[], size_t wid, size_t hgt) const;
+
+	size_t plan() const;
+
+	bool dead() const;
 
 public:
 
 	/**
 	 *	\brief constructor
 	 */
-	Mind();
+	Heart();
 
 	/**
 	 *	\brief destructor
 	 */
-	~Mind();
-
-public:
-
+	~Heart();
 
 private:
 
