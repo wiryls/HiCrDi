@@ -1,0 +1,49 @@
+﻿<Window x:Class="GUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GUI"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="180" MinHeight="100" MaxHeight="300" Width="640" MinWidth="300" MaxWidth="800"
+        Background="Transparent" AllowsTransparency="True" WindowStyle="None" ResizeMode="CanResizeWithGrip" Topmost="True"
+        MouseDown="Window_DragMove" MouseDoubleClick="Window_MouseDoubleClick" SizeChanged="Window_SizeChanged" >
+    <Grid x:Name="View" >
+        <Grid.Resources>
+            <ContextMenu x:Key="MainMenu">
+                <MenuItem Header="_Testing" IsCheckable="true" IsChecked="{Binding Path=IsTesting, Mode=TwoWay}"/>
+                <MenuItem Header="_Running" IsCheckable="true" IsChecked="{Binding Path=IsRunning, Mode=TwoWay}"/>
+                <Separator />
+                <MenuItem Header="_Ex it  " Click="Window_Close"/>
+            </ContextMenu>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="0*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Border x:Name="BreathingBorder" CornerRadius="4,4,0,4" Margin="4" BorderThickness="6" 
+                BorderBrush="White" Opacity="0.8" 
+                ContextMenu="{DynamicResource MainMenu}">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="0" Color="#FF414141" BlurRadius="6"/>
+                </Border.Effect>
+            </Border>
+            <Grid Margin="15">
+                <Frame x:Name="MainFrame" Content="" NavigationUIVisibility="Hidden" Background="Transparent"/>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Border CornerRadius="4,4,0,4" Margin="4" BorderThickness="6" 
+                BorderBrush="#FF3157FF" Opacity="0.8" 
+                ContextMenu="{DynamicResource MainMenu}" >
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="0" Color="#FF414141" BlurRadius="6"/>
+                </Border.Effect>
+            </Border>
+            <Grid Margin="15">
+                <Image x:Name="DebugOutput" IsHitTestVisible="False"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

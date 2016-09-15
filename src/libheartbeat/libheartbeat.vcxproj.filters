@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="utility">
+      <UniqueIdentifier>{815d25fe-bc29-4f5d-918b-0e7dda64c34f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utility\头文件">
+      <UniqueIdentifier>{5ebba823-93cd-49cd-aa00-bf917533eab5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utility\源文件">
+      <UniqueIdentifier>{ead6cebf-f177-48db-bd69-4cb18716a5e2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="libheartbeat.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="libheartbeat.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\algorithm.hpp">
+      <Filter>utility\头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\iniparser.hpp">
+      <Filter>utility\头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\log.hpp">
+      <Filter>utility\头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\randnum.hpp">
+      <Filter>utility\头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\singleton.hpp">
+      <Filter>utility\头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\timer.hpp">
+      <Filter>utility\头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ibeat.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="icogn.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ifeel.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="imind.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="kmcogn.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="qlmind.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="settings.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cvfeel.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="datatype.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="heart.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\types.hpp">
+      <Filter>utility\头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="libheartbeat.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\algorithm.cpp">
+      <Filter>utility\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\iniparser.cpp">
+      <Filter>utility\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\log.cpp">
+      <Filter>utility\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\randnum.cpp">
+      <Filter>utility\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\timer.cpp">
+      <Filter>utility\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="kmcogn.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="qlmind.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="settings.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cvfeel.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="datatype.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="heart.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
