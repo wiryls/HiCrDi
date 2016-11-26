@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Timers;
 using System.Windows;
 using System.Windows.Media;
@@ -12,27 +13,32 @@ namespace GUI
     {
         private void ProcessFrame(object source, ElapsedEventArgs e)
         {
-            mutex.WaitOne();
+            mutex01.WaitOne();
 
             var bitmap = this.Dispatcher.Invoke(()=> {
                 return ImageHelper.CaptureElement(this.MainFrame);
             });
-            if(bitmap == null)
+            if(bitmap == null) {
+                mutex01.ReleaseMutex();
                 return;
+            }
+
+            mutex02.WaitOne();
 
             BitmapSource bitmapSource = ImageHelper.Bitmap2BitmapSource(bitmap);
+
+            mutex01.ReleaseMutex();
 
             var ok = heart.TakeImage(bitmapSource);
 
             if(isTesting) {
-                // libheartbeat.test(tmp.ImagePixels, tmp.ImagePixels, (uint)tmp.Info.Width, (uint)tmp.Info.Height);
-                bitmapSource = heart.GetDebugImage();
+                var dbg_img = heart.GetDebugImage();
 
                 if(isTesting) {
-                    bitmapSource.Freeze();
+                    dbg_img.Freeze();
                     this.Dispatcher.BeginInvoke(new Action<BitmapSource>((img) =>
                         this.DebugOutput.Source = img
-                    ), bitmapSource);
+                    ), dbg_img);
                 }
             }
 
@@ -41,28 +47,41 @@ namespace GUI
                 this.Dispatcher.Invoke(() => { UpdateBorderEffect(); });
             }
 
-            mutex.ReleaseMutex();
+            mutex02.ReleaseMutex();
 
             if (heart.IsGameOver()) {
-                heart.Pause();
-                heart.Resume();
-                this.action.Jump();
-                this.action.Idel();
+                if (this.is_dino_dead == false && this.IsAutoScreenshot == true) {
+                    this.is_dino_dead = true;
+                    heart.Pause();
+                    try {
+                        var folder_path = "screenshot";
+                        if(!Directory.Exists(folder_path))
+                            Directory.CreateDirectory(folder_path);
+                        var fs = File.Open(folder_path + "\\" + DateTime.Now.ToString("HHmmss") + ".png", FileMode.OpenOrCreate);
+                        ImageHelper.GenerateImage(bitmapSource, ".png", fs);
+                        fs.Close();
+                    } catch(Exception) {
+                        // TODO:
+                    }
+                    heart.Resume();
+                }
+                if (this.IsAutoRestart == true) {
+                    this.action.Jump();
+                    this.action.Idle();
+                }
             } else {
-                switch(heart.Choice()) {
-                case Heart.Action.Idel: { this.action.Idel(); break; }
-                case Heart.Action.Jump: { this.action.Jump(); break; }
-                case Heart.Action.Down: { this.action.Down(); break; }
-                default: { this.action.Idel(); break; }
+                if(this.is_dino_dead == true)
+                    this.is_dino_dead = false;
+
+                if (this.IsKeepingIdle == false) {
+                    switch(heart.Choice()) {
+                    case Heart.Action.Idle: { this.action.Idle(); break; }
+                    case Heart.Action.Jump: { this.action.Jump(); break; }
+                    case Heart.Action.Down: { this.action.Down(); break; }
+                    default:                { this.action.Idle(); break; }
+                    }
                 }
             }
-
-            //{
-            //    var img = new IntermediateImage(bitmapSource);
-            //    var fs = File.Open("pics\\" + i.ToString() + ".png", FileMode.OpenOrCreate);
-            //    ImageHelper.GenerateImage(bitmapSource, ".png", fs);
-            //    fs.Close();
-            //}
 
             /* References:
              *
@@ -99,7 +118,7 @@ namespace GUI
             stroy.Begin();
 
             /* References:
-             * 
+             *
              * [Beginner's WPF Animation Tutorial]
              * (http://www.codeproject.com/Articles/23257/Beginner-s-WPF-Animation-Tutorial)
              * [Modify a storyboard to repeat or reverse at the end of its cycle]
@@ -115,16 +134,19 @@ namespace GUI
 
         private ActionHelper action = new ActionHelper();
 
-        private System.Threading.Mutex mutex = new System.Threading.Mutex();
+        private System.Threading.Mutex mutex01 = new System.Threading.Mutex();
+        private System.Threading.Mutex mutex02 = new System.Threading.Mutex();
 
         private Timer mainTimer = new Timer()
         {
-            Interval = 40,
+            Interval = 25,
             Enabled = false,
         };
 
+        private bool is_dino_dead = false;
+
         /* References:
-         * 
+         *
          * [Repeating a function every few seconds]
          * (http://stackoverflow.com/questions/11296897/repeating-a-function-every-few-seconds)
          */

@@ -56,9 +56,9 @@ namespace GUI.Utility
                 );
 
             /*
-             * References: 
+             * References:
              * [How can I convert byte[] to BitmapImage?]
-             * (http://stackoverflow.com/questions/15270844/how-can-i-convert-byte-to-bitmapimage/15272528#15272528) 
+             * (http://stackoverflow.com/questions/15270844/how-can-i-convert-byte-to-bitmapimage/15272528#15272528)
              */
         }
 

@@ -52,7 +52,7 @@ namespace GUI
             Close();
             e.Handled = true;
             /* References:
-             * 
+             *
              * [Creating a custom Close Button in WPF]
              * (http://stackoverflow.com/questions/5193763/creating-a-custom-close-button-in-wpf)
              */
@@ -74,7 +74,7 @@ namespace GUI
             }
 
             /* References:
-             * 
+             *
              * [How do you detect a mouse double left click in WPF?]
              * (http://stackoverflow.com/questions/11868956/how-do-you-detect-a-mouse-double-left-click-in-wpf)
              */

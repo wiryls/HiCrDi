@@ -1,10 +1,11 @@
 /****************************************************************************
- *	@file		Heart.cpp
- *	@brief		Implement of Heart.hpp
+ *
+ *  @file       Heart.cpp
+ *  @brief      Implement of Heart.hpp
  *
  *
- *	Date        Name        Description
- *	21/04/16	MYLS		Creation.
+ *  Date        Name        Description
+ *  16/04/21    MYLS        Creation.
  *
  ***************************************************************************/
 
@@ -12,218 +13,131 @@
 #include <opencv2/imgproc.hpp>
 
 #include "utility/timer.hpp"
-#include "cvfeel.hpp"
-#include "kmcogn.hpp"
-#include "qlmind.hpp"
+#include "utility/log.hpp"
+#include "cv_eye.hpp"
+#include "km_mate.hpp"
+#include "my_mind.hpp"
+#include "cv_board.hpp"
 #include "Heart.hpp"
 
 /****************************************************************************
- *	private Impl
+ *  private Pimpl
  ***************************************************************************/
 
-struct hb::Heart::Impl
+struct hb::Heart::Pimpl
 {
-	bool is_runnning;
-	float last_time;
-	cm::timer timer;
-	
-	CvFeel feel;
-	KmCogn cogn;
-	QlMind mind;
+    bool is_runnning;
+    float last_time;
+    cm::timer timer;
 
-	View view;
-	Sense sense;
-	Info info;
-	Action action;
+    cv_board processor00;
+    cv_eye   processor01;
+    km_mate  processor02;
+    my_mind  processor03;
 
-	void clear_most();
+    void clear_most();
 };
 
 /****************************************************************************
- *	private
+ *  private
  ***************************************************************************/
 
-void hb::Heart::Impl::clear_most()
+void hb::Heart::Pimpl::clear_most()
 {
-	is_runnning = false;
-	last_time = 0.f;
+    is_runnning = false;
+    last_time = 0.f;
 
-	feel.clear();
-	cogn.clear();
-
-	std::swap(view,   decltype(view  )());
-	std::swap(sense,  decltype(sense )());
-	std::swap(info,   decltype(info  )());
-	std::swap(action, decltype(action)());
+    processor01.clear();
+    processor03.clear();
+    processor02.clear();
 }
 
 
 /****************************************************************************
- *	public
+ *  public
  ***************************************************************************/
 
 void hb::Heart::start()
 {
-	impl->timer.start();
-	impl->is_runnning = true;
+    pimpl->timer.start();
+    pimpl->is_runnning = true;
 }
 
 void hb::Heart::pause()
 {
-	impl->timer.pause();
-	impl->clear_most();
+    pimpl->timer.pause();
+    pimpl->clear_most();
 }
 
 void hb::Heart::resume()
 {
-	impl->timer.resume();
-	impl->last_time = impl->timer.get_elapsed_time() * 1e-3f;
-	impl->is_runnning = true;
+    pimpl->timer.resume();
+    pimpl->last_time = pimpl->timer.get_elapsed_time() * 1e-3f;
+    pimpl->is_runnning = true;
 }
 
 void hb::Heart::stop()
 {
-	impl->timer.stop();
-	impl->clear_most();
-	impl->mind.clear();
+    pimpl->timer.stop();
+    pimpl->clear_most();
+    //pimpl->processor02.clear();
 }
 
 bool hb::Heart::view(uint8_t const bgra32[], size_t wid, size_t hgt)
 {
-	auto & i = *impl;
+    auto & p = *pimpl;
 
-	/* get bgr img */
-	auto src = cv::Mat(hgt, wid, CV_8UC4, (void *)bgra32);
-	cv::cvtColor(src, src, cv::COLOR_BGRA2BGR);
+    /* get bgra img */
+    p.processor01.set(bgra32, wid, hgt);
 
-	if (i.is_runnning) 
-	{
-		/* get delta time */
-		float curr_enttime = i.timer.get_elapsed_time() * 1e-3f;
-		float delta_time   = curr_enttime - i.last_time;
-		i.last_time        = curr_enttime;
-		if (delta_time > 1.0f)
-			delta_time = 1.0f;
+    /* process */
+    if (p.processor01 == cv_eye::status_t::ready) {
+        p.processor01 >> p.processor02;
+        if (p.processor02 == km_mate::status_t::ready) {
+            p.processor02 >> p.processor03;
+        }
+    }
 
-		/* init input */
-		i.view.delta_time = delta_time;
-		i.view.img = src;
-
-		/* process */
-		i.feel << i.view  >> i.sense;
-		if (i.sense.dinosaurs.empty())
-			return false;
-
-		i.cogn << i.sense >> i.info;
-		i.mind << i.info  >> i.action;
-
-		return true;
-	} 
-	else 
-	{	/* process */
-		i.view.img = src;
-		i.feel << i.view  >> i.sense;
-	
-		/* is ready */
-		return (!i.sense.dinosaurs.empty());
-	}
+    return p.processor01.is_dino_found() || p.processor01.is_dino_dead();
 }
 
 size_t hb::Heart::plan() const
 {
-	auto & i = *impl;
-	if (!i.is_runnning)
-		return size_t();
-	else
-		return i.action.choice;
+    auto & p = *pimpl;
+    if (!p.is_runnning)
+        return size_t();
+    else
+        return p.processor03.get();
 }
 
 bool hb::Heart::dead() const
 {
-	auto & i = *impl;
-	if (!i.is_runnning)
-		return false;
-	else
-		return i.sense.is_dead;
+    auto & p = *pimpl;
+
+    if (!p.is_runnning)
+        return false;
+    else
+        return p.processor01.is_dino_dead();
 }
 
 bool hb::Heart::ready() const
 {
-	auto & i = *impl;
-    return i.feel && i.cogn && i.mind;
+    auto & p = *pimpl;
+    return true;
 }
 
 void hb::Heart::know(uint8_t bgra32[], size_t wid, size_t hgt) const
 {
-	auto & i = *impl;
-	if (i.sense.debug_view.empty() || wid * hgt != i.sense.debug_view.total())
-		return;
-	
-	auto dst = i.sense.debug_view.clone();
-	if (i.is_runnning) {
-		char buffer[11];
-		{
-			for (auto & obj : i.sense.dinosaurs) {
-				cv::Rect r = hb::toRect(obj);
-				std::sprintf(buffer, "%.2f", obj.s);
-				cv::putText(dst, buffer, r.br(), cv::FONT_HERSHEY_COMPLEX, 0.4, cv::Scalar::all(128));
-				cv::rectangle(dst, r, cv::Scalar::all(128));
-			}
-			for (auto & obj : i.sense.cactus) {
-				cv::Rect r = hb::toRect(obj);
-				std::sprintf(buffer, "%.2f", obj.s);
-				cv::putText(dst, buffer, r.br(), cv::FONT_HERSHEY_COMPLEX, 0.4, cv::Scalar::all(128));
-				cv::rectangle(dst, r, cv::Scalar::all(255));
-			}
-			for (auto & obj : i.sense.birds) {
-				cv::Rect r = hb::toRect(obj);
-				std::sprintf(buffer, "%.2f", obj.s);
-				cv::putText(dst, buffer, r.br(), cv::FONT_HERSHEY_COMPLEX, 0.4, cv::Scalar::all(128));
-				cv::rectangle(dst, r, cv::Scalar::all(196));
-			}
-		}
+    auto & p = *pimpl;
 
-		{
-			for (auto & obj : i.info.objs) {
-				cv::Rect r = hb::toRect(obj, i.info.x0, i.info.y0);
-				std::sprintf(buffer, "%u", obj.id);
-				cv::putText(dst, buffer, r.tl(), cv::FONT_HERSHEY_COMPLEX, 1, cv::Scalar::all(255));
-				std::sprintf(buffer, "%.2f", obj.speed_x);
-				cv::putText(dst, buffer, r.tl() + cv::Point(0, 16), cv::FONT_HERSHEY_COMPLEX, 0.5, cv::Scalar::all(225));
-				cv::rectangle(dst, r, cv::Scalar::all(196), 3);
-			}
-		}
+    p.processor01 >> p.processor00;
+    p.processor02 >> p.processor00;
+    p.processor03>> p.processor00;
 
-		{
-			cv::Point p(4, 16);
-			std::sprintf(buffer, "act: %u", i.action.choice);
-			cv::putText(dst, buffer, p, cv::FONT_HERSHEY_COMPLEX, 0.4, cv::Scalar::all(255));
-			p = cv::Point(4, 32);
-			std::sprintf(buffer, "cnt: %u", i.action.cnt);
-			cv::putText(dst, buffer, p, cv::FONT_HERSHEY_COMPLEX, 0.4, cv::Scalar::all(255));
-			p = cv::Point(4, 48);
-			for (auto & s : i.action.states) {
-				std::sprintf(buffer, "%u", s);
-				cv::putText(dst, buffer, p, cv::FONT_HERSHEY_COMPLEX, 0.4, cv::Scalar::all(255));
-				p += cv::Point(16, 0);
-			}
-		}
-
-		if (i.sense.is_dead)
-			cv::bitwise_not(dst, dst);
-	}
-
-	/* note: this way of copy is not safe */
-	int idx = 0;
-	for (auto iter = dst.datastart; iter != dst.dataend; iter++) {
-		bgra32[idx++] = *iter;
-		bgra32[idx++] = *iter;
-		bgra32[idx++] = *iter;
-		bgra32[idx++] = 0xFFU;
-	}
+    p.processor00.dump(bgra32, wid, hgt);
 }
 
 
-hb::Heart::Heart() : impl(std::make_unique<Impl>()) { stop(); }
+hb::Heart::Heart() : pimpl(std::make_unique<Pimpl>()) { stop(); }
 
 hb::Heart::~Heart() {}

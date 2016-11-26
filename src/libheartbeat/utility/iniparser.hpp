@@ -1,10 +1,11 @@
 ﻿/*********************************************************************
- *	@file		iniparser.hpp
- *	@brief		Class iniparser, for load ini file
+ *
+ *  @file       iniparser.hpp
+ *  @brief      Class iniparser, for load ini file
  *
  *
- *	Date        Name        Description
- *	04/03/15	MYLS		Creation.
+ *  Date        Name        Description
+ *  15/04/03    MYLS        Creation.
  *
  *********************************************************************/
 
@@ -14,76 +15,76 @@
 #include <string>
 
 namespace cm {
-	class iniparser;
+    class iniparser;
 }
 
 /**
- *	\brief	Class iniparser, for load ini file
+ *  \brief  Class iniparser, for load ini file
  */
 class cm::iniparser
 {
 
 public:
 
-	/**
-	 *	\brief Constructor
-	 */
-	iniparser();
+    /**
+     *  \brief  Constructor
+     */
+    iniparser();
 
-	/**
-	 *	\brief	Destructor
-	 */
-	~iniparser();
+    /**
+     *  \brief  Destructor
+     */
+    ~iniparser();
 
 public:
 
-	/**
-	 *	\brief	load data from a file
-	 *
-	 *	\param	filePath	file path
-	 *
-	 *	\return	if loaded successfully
-	 */
-	bool load(const std::string & filePath);
+    /**
+     *  \brief  load data from a file
+     *
+     *  \param  filePath    file path
+     *
+     *  \return if loaded successfully
+     */
+    bool load(const std::string & filePath);
 
-	/**
-	 *	\brief	get valueini of [section.key]
-	 *
-	 *	\param	key		"section.key"
-	 *
-	 *	\return			target value, if not exits, return "".
-	 */
-	const std::string & get_string(const std::string & key) const;
+    /**
+     *  \brief  get valueini of [section.key]
+     *
+     *  \param  key     "section.key"
+     *
+     *  \return         target value, if not exits, return "".
+     */
+    const std::string & get_string(const std::string & key) const;
 
-	/**
-	 *	\brief	clear all data
-	 */
-	void clear();
-
-private:
-
-	/**
-	 *	\brief	remove trailing spaces
-	 *
-	 *	\param	str		string to be trim
-	 *
-	 *	\return			result of trimming
-	 */
-	static std::string& trim(std::string & str);
-
-	/**
-	 *	\brief	remove trailing spaces[overload for GCC]
-	 *
-	 *	\param	str		string to be trim
-	 *
-	 *	\return			result of trimming
-	 */
-	static std::string trim(std::string && str);
+    /**
+     *  \brief  clear all data
+     */
+    void clear();
 
 private:
 
-	struct Impl;
-	std::unique_ptr<Impl> impl;
+    /**
+     *  \brief  remove trailing spaces
+     *
+     *  \param  str     string to be trim
+     *
+     *  \return         result of trimming
+     */
+    static std::string& trim(std::string & str);
+
+    /**
+     *  \brief  remove trailing spaces[overload for GCC]
+     *
+     *  \param  str     string to be trim
+     *
+     *  \return         result of trimming
+     */
+    static std::string trim(std::string && str);
+
+private:
+
+    struct Pimpl;
+    std::unique_ptr<Pimpl> pimpl;
 };
 
 

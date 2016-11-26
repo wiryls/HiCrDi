@@ -488,11 +488,11 @@ namespace GUI.Utility
         // CTRL keys on the right-hand side of the keyboard; the INS, DEL, HOME, END, PAGE UP,
         // PAGE DOWN, and arrow keys in the clusters to the left of the numeric keypad; the NUM LOCK
         // key; the BREAK (CTRL+PAUSE) key; the PRINT SCRN key; and the divide (/) and ENTER keys in
-        // the numeric keypad. The extended-key flag is set if the key is an extended key. 
+        // the numeric keypad. The extended-key flag is set if the key is an extended key.
         //
         // - docs appear to be incorrect. Use of Spy++ indicates that break is not an extended key.
         // Also, menu key and windows keys also appear to be extended.
-        private static readonly Key[] ExtendedKeys = new Key[] { 
+        private static readonly Key[] ExtendedKeys = new Key[] {
                                                                    Key.RightAlt,
                                                                    Key.RightCtrl,
                                                                    Key.NumLock,
@@ -518,7 +518,7 @@ namespace GUI.Utility
 }
 
 /* References：
- * 
+ *
  * [PInvoke.net]
  * (http://www.pinvoke.net/index.aspx)
  */

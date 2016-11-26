@@ -4,6 +4,7 @@
 **/test/*.bmp
 **/test/*.png
 **/test/*.dll
+**/junk/
 **/external/include/*
 **/external/lib/*
 

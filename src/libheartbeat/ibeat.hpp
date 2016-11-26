@@ -1,55 +1,61 @@
 ﻿/****************************************************************************
- *	@file		ibeat.hpp
- *	@brief		
+ *
+ *  @file       ibeat.hpp
+ *  @brief
  *
  *
- *	Date        Name        Description
- *	09/05/16	MYLS		Creation.
+ *  Date        Name        Description
+ *  16/09/05    MYLS        Creation.
+ *  16/11/20    MYLS        change to a new one.
  *
  ***************************************************************************/
 #pragma once
 
-namespace hb 
+namespace hb
 {
-	template<class Input, class Output> class IBeat;
+    template<typename Beat_T> class IBeat;
 }
 
 /****************************************************************************
- *	declaration
+ *  declaration
  ***************************************************************************/
 
 /**
- *	\brief	TODO:
+ *  \brief  TODO:
  */
-template<class input_t, class output_t> class hb::IBeat
+template<typename Beat_T> class hb::IBeat
 {
+public:
+
+    typedef Beat_T Self;
 
 public:
 
-	typedef  input_t  Input;
-
-	typedef output_t Output;
-
-public:
-
-	virtual IBeat &	operator <<   (Input  const &) = 0;
-
-	virtual IBeat & operator >>   (Output &)       = 0;
-
-	virtual         operator bool () const         = 0;
-
-	virtual void    clear()						   = 0;
+    enum struct status_t
+    {
+        uninitialized,
+        ready,
+        error,
+    };
 
 public:
 
-	/**
-	 *	\brief virtual destructor
-	 */
-	virtual ~IBeat() = 0;
+    virtual operator status_t () const = 0;
+
+    virtual void     clear    ()       = 0;
+
+public:
+
+    /**
+     *  \brief virtual destructor
+     */
+    virtual ~IBeat() = 0;
+
 };
 
+
 /****************************************************************************
- *	implementation
+ *  implementation
  ***************************************************************************/
 
-template<class T, class U> inline hb::IBeat<T, U>::~IBeat() {}
+template<class Beat_T> inline hb::IBeat<Beat_T>::~IBeat() {}

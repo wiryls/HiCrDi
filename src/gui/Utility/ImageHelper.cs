@@ -13,23 +13,23 @@ namespace GUI.Utility
                 return null;
 
             var rect = VisualTreeHelper.GetDescendantBounds(target);
-            
+
             Point screenPosition = target.PointToScreen(new Point(rect.X, rect.Y));
 
             var bmp = new System.Drawing.Bitmap(
-                (int)rect.Width, (int)rect.Height, 
+                (int)rect.Width, (int)rect.Height,
                 System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             System.Drawing.Graphics.FromImage(bmp).CopyFromScreen
             (
-                (int)screenPosition.X, (int)screenPosition.Y, 0, 0, 
+                (int)screenPosition.X, (int)screenPosition.Y, 0, 0,
                 bmp.Size, System.Drawing.CopyPixelOperation.SourceCopy
             );
-            
+
             return bmp;
 
             /* References:
-             * 
+             *
              * [C#: how to take a screenshot of a portion of screen]
              * (http://stackoverflow.com/questions/3306600/c-how-to-take-a-screenshot-of-a-portion-of-screen)
              * [WPF Screen Capture (with Rectangle)]
@@ -54,7 +54,7 @@ namespace GUI.Utility
             bitmap.UnlockBits(bitmapData);
             return bitmapSource;
 
-            /* 
+            /*
              * References:
              *
              * [fast converting Bitmap to BitmapSource wpf]
@@ -76,11 +76,11 @@ namespace GUI.Utility
             encoder.Frames.Add(BitmapFrame.Create(bitmap));
             encoder.Save(destStream);
 
-            /* 
+            /*
              * References:
              *
              * [在WPF程序中将控件所呈现的内容保存成图像]
-             * (http://www.cnblogs.com/TianFang/archive/2012/10/07/2714140.html) 
+             * (http://www.cnblogs.com/TianFang/archive/2012/10/07/2714140.html)
              * [Rendering a WPF Container to Bitmap]
              * (http://weblog.west-wind.com/posts/2007/Sep/10/Rendering-a-WPF-Container-to-Bitmap)
              */

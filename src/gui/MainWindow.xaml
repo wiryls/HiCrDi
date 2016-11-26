@@ -11,8 +11,12 @@
     <Grid x:Name="View" >
         <Grid.Resources>
             <ContextMenu x:Key="MainMenu">
-                <MenuItem Header="_Testing" IsCheckable="true" IsChecked="{Binding Path=IsTesting, Mode=TwoWay}"/>
                 <MenuItem Header="_Running" IsCheckable="true" IsChecked="{Binding Path=IsRunning, Mode=TwoWay}"/>
+                <Separator />
+                <MenuItem Header="_Debug View"       IsCheckable="true" IsChecked="{Binding Path=IsTesting, Mode=TwoWay}"/>
+                <MenuItem Header="Auto _Screenshot"  IsCheckable="true" IsChecked="{Binding Path=IsAutoScreenshot, Mode=TwoWay}"/>
+                <MenuItem Header="Auto _Restart"     IsCheckable="true" IsChecked="{Binding Path=IsAutoRestart, Mode=TwoWay}"/>
+                <MenuItem Header="_Keep Idle"        IsCheckable="true" IsChecked="{Binding Path=IsKeepingIdle, Mode=TwoWay}"/>
                 <Separator />
                 <MenuItem Header="_Ex it  " Click="Window_Close"/>
             </ContextMenu>
@@ -22,8 +26,8 @@
             <RowDefinition Height="0*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
-            <Border x:Name="BreathingBorder" CornerRadius="4,4,0,4" Margin="4" BorderThickness="6" 
-                BorderBrush="White" Opacity="0.8" 
+            <Border x:Name="BreathingBorder" CornerRadius="4,4,0,4" Margin="4" BorderThickness="6"
+                BorderBrush="White" Opacity="0.8"
                 ContextMenu="{DynamicResource MainMenu}">
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="0" Color="#FF414141" BlurRadius="6"/>
@@ -34,8 +38,8 @@
             </Grid>
         </Grid>
         <Grid Grid.Row="1">
-            <Border CornerRadius="4,4,0,4" Margin="4" BorderThickness="6" 
-                BorderBrush="#FF3157FF" Opacity="0.8" 
+            <Border CornerRadius="4,4,0,4" Margin="4" BorderThickness="6"
+                BorderBrush="#FF3157FF" Opacity="0.8"
                 ContextMenu="{DynamicResource MainMenu}" >
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="0" Color="#FF414141" BlurRadius="6"/>

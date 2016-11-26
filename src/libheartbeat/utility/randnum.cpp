@@ -1,9 +1,10 @@
 /*********************************************************************
- *	@file		RandNum.cpp
- *	@brief		For generating random number.
  *
- *	Date        Name        Description
- *	05/18/16	MYLS		Creation.
+ *  @file       RandNum.cpp
+ *  @brief      For generating random number.
+ *
+ *  Date        Name        Description
+ *  05/18/16    MYLS        Creation.
  *
  *********************************************************************/
 
@@ -15,25 +16,25 @@
 
 namespace cm
 {
-	template <typename _T> inline _T rand_real(_T min, _T max);
-	template <typename _T> inline _T rand_integer(_T min, _T max);
+    template <typename _T> inline _T rand_real(_T min, _T max);
+    template <typename _T> inline _T rand_integer(_T min, _T max);
 }
 
-namespace cm 
+namespace cm
 {
-	static std::mt19937 engine = std::mt19937(std::random_device()());
+    static std::mt19937 engine = std::mt19937(std::random_device()());
 }
 
 template<typename _T> _T cm::rand_real(_T min, _T max)
 {
-	std::uniform_real_distribution<_T> distribution(min, max);
-	return distribution(engine);
+    std::uniform_real_distribution<_T> distribution(min, max);
+    return distribution(engine);
 }
 
 template<typename _T> _T cm::rand_integer(_T min, _T max)
 {
-	std::uniform_int_distribution<_T> distribution(min, max);
-	return distribution(engine);
+    std::uniform_int_distribution<_T> distribution(min, max);
+    return distribution(engine);
 }
 
 /* for real */

@@ -10,68 +10,93 @@ namespace GUI.Utility
     {
         private IntPtr handle;
         private IntermediateImage inner_image;
+        private System.Threading.Mutex mutex = new System.Threading.Mutex();
 
         public Heart()
         {
             LibHeartBeat.log_switch(true);
             handle = LibHeartBeat.i_come();
         }
-        
+
         public bool TakeImage(BitmapSource bitmap)
         {
+            mutex.WaitOne();
+
             inner_image = new IntermediateImage(bitmap);
             var bgra32 = inner_image.ImagePixels;
             var wid = (uint)inner_image.Info.Width;
             var hgt = (uint)inner_image.Info.Height;
+            var rv = LibHeartBeat.i_see(handle, bgra32, wid, hgt) != 0;
 
-            return LibHeartBeat.i_see(handle, bgra32, wid, hgt) != 0;
+            mutex.ReleaseMutex();
+            return rv;
         }
 
         public enum Action
         {
-            Idel,
+            Idle,
             Jump,
             Down
         }
 
         public Action Choice()
         {
+            mutex.WaitOne();
+
+            Action rv;
             switch(LibHeartBeat.i_decide(handle)) {
-            case 0: return Action.Idel;
-            case 1: return Action.Jump;
-            case 2: return Action.Down;
-            default: return Action.Idel;
+            case 0:  rv = Action.Idle; break;
+            case 1:  rv = Action.Jump; break;
+            case 2:  rv = Action.Down; break;
+            default: rv = Action.Idle; break;
             }
+
+            mutex.ReleaseMutex();
+            return rv;
         }
 
         public bool IsReady()
         {
-            return LibHeartBeat.am_i_ready(handle) != 0;
+            mutex.WaitOne();
+            var rv = LibHeartBeat.am_i_ready(handle) != 0;
+            mutex.ReleaseMutex();
+            return rv;
         }
 
         public bool IsGameOver()
         {
-            return LibHeartBeat.am_i_dead(handle) != 0;
+            mutex.WaitOne();
+            var rv = LibHeartBeat.am_i_dead(handle) != 0;
+            mutex.ReleaseMutex();
+            return rv;
         }
 
         public void Start()
         {
+            mutex.WaitOne();
             LibHeartBeat.i_start(handle);
+            mutex.ReleaseMutex();
         }
 
         public void Pause()
         {
+            mutex.WaitOne();
             LibHeartBeat.i_rest(handle);
+            mutex.ReleaseMutex();
         }
 
         public void Resume()
         {
+            mutex.WaitOne();
             LibHeartBeat.i_continue(handle);
+            mutex.ReleaseMutex();
         }
 
         public void Stop()
         {
+            mutex.WaitOne();
             LibHeartBeat.i_stop(handle);
+            mutex.ReleaseMutex();
         }
 
         public BitmapSource GetDebugImage()
@@ -79,18 +104,26 @@ namespace GUI.Utility
             if(inner_image == null)
                 return null;
 
+            mutex.WaitOne();
+
             var bgra32 = inner_image.ImagePixels;
             var wid = (uint)inner_image.Info.Width;
             var hgt = (uint)inner_image.Info.Height;
             LibHeartBeat.i_know(handle, bgra32, wid, hgt);
 
-            return inner_image.ToBitmapSource();
+            var rv = inner_image.ToBitmapSource();
+            mutex.ReleaseMutex();
+            return rv;
         }
 
         public void Dispose()
         {
+            mutex.WaitOne();
+
             Dispose(true);
             GC.SuppressFinalize(this);
+
+            mutex.ReleaseMutex();
         }
 
         [SecurityPermission(SecurityAction.Demand, UnmanagedCode = true)]

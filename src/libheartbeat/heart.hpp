@@ -1,10 +1,11 @@
 ﻿/*********************************************************************
- *	@file		Heart.hpp
- *	@brief		
+ *
+ *  @file       Heart.hpp
+ *  @brief
  *
  *
- *	Date        Name        Description
- *	21/04/16	MYLS		Creation.
+ *  Date        Name        Description
+ *  16/04/21    MYLS        Creation.
  *
  *********************************************************************/
 #pragma once
@@ -12,51 +13,51 @@
 #include <memory>
 
 namespace hb {
-	class Heart;
+    class Heart;
 }
 
 /**
- *	\brief	A beating Heart
+ *  \brief  A beating Heart
  */
 class hb::Heart
 {
 
 public:
 
-	void start();
+    void start();
 
-	void pause();
+    void pause();
 
-	void resume();
+    void resume();
 
-	void stop();
+    void stop();
 
 public:
 
-	bool view(uint8_t const bgra32[], size_t wid, size_t hgt);
+    bool view(uint8_t const bgra32[], size_t wid, size_t hgt);
 
-	void know(uint8_t       bgra32[], size_t wid, size_t hgt) const;
+    void know(uint8_t       bgra32[], size_t wid, size_t hgt) const;
 
-	size_t plan() const;
+    size_t plan() const;
 
-	bool dead() const;
+    bool dead() const;
 
     bool ready() const;
 
 public:
 
-	/**
-	 *	\brief constructor
-	 */
-	Heart();
+    /**
+     *  \brief constructor
+     */
+    Heart();
 
-	/**
-	 *	\brief destructor
-	 */
-	~Heart();
+    /**
+     *  \brief destructor
+     */
+    ~Heart();
 
 private:
 
-	struct Impl;
-	std::unique_ptr<Impl> impl;
+    struct Pimpl;
+    std::unique_ptr<Pimpl> pimpl;
 };

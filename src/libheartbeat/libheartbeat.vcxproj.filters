@@ -50,30 +50,6 @@
     <ClInclude Include="utility\timer.hpp">
       <Filter>utility\头文件</Filter>
     </ClInclude>
-    <ClInclude Include="ibeat.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="icogn.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ifeel.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="imind.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="kmcogn.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="qlmind.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="settings.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="cvfeel.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="datatype.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -81,6 +57,24 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="utility\types.hpp">
+      <Filter>utility\头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ibeat.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cv_board.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cv_eye.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="km_mate.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="my_mind.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\settings.hpp">
       <Filter>utility\头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -103,23 +97,26 @@
     <ClCompile Include="utility\timer.cpp">
       <Filter>utility\源文件</Filter>
     </ClCompile>
-    <ClCompile Include="kmcogn.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="qlmind.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="settings.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="cvfeel.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="datatype.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="heart.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="config.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cv_board.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cv_eye.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="km_mate.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="my_mind.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\settings.cpp">
+      <Filter>utility\源文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
