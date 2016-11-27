@@ -50,8 +50,7 @@ namespace GUI
             mutex02.ReleaseMutex();
 
             if (heart.IsGameOver()) {
-                if (this.is_dino_dead == false && this.IsAutoScreenshot == true) {
-                    this.is_dino_dead = true;
+                if (this.isDead == false && this.IsAutoScreenshot == true) {
                     heart.Pause();
                     try {
                         var folder_path = "screenshot";
@@ -69,10 +68,10 @@ namespace GUI
                     this.action.Jump();
                     this.action.Idle();
                 }
-            } else {
-                if(this.is_dino_dead == true)
-                    this.is_dino_dead = false;
 
+                if (this.isDead == false)
+                    this.isDead = true;
+            } else {
                 if (this.IsKeepingIdle == false) {
                     switch(heart.Choice()) {
                     case Heart.Action.Idle: { this.action.Idle(); break; }
@@ -81,6 +80,17 @@ namespace GUI
                     default:                { this.action.Idle(); break; }
                     }
                 }
+
+                if (this.isDead == true)
+                    this.isDead = false;
+            }
+
+            if (this.isDead == false && this.isHitting == true) {
+                if (main_timer.Interval != timer_running_interval)
+                    main_timer.Interval = timer_running_interval;
+            } else {
+                if (main_timer.Interval != timer_relaxing_interval)
+                    main_timer.Interval = timer_relaxing_interval;
             }
 
             /* References:
@@ -137,13 +147,16 @@ namespace GUI
         private System.Threading.Mutex mutex01 = new System.Threading.Mutex();
         private System.Threading.Mutex mutex02 = new System.Threading.Mutex();
 
-        private Timer mainTimer = new Timer()
+        private const double timer_running_interval  = 25;
+        private const double timer_relaxing_interval = 500;
+
+        private Timer main_timer = new Timer()
         {
-            Interval = 25,
+            Interval = timer_relaxing_interval,
             Enabled = false,
         };
 
-        private bool is_dino_dead = false;
+        private bool isDead = false;
 
         /* References:
          *

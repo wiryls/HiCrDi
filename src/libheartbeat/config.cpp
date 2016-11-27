@@ -48,11 +48,11 @@ namespace match {
     extern const double contrast_alpha         = clamp(  0.0,   3.0,   1.96);
     extern const double binarization_threshold = clamp(  0.0, 255.0, 249.0 );
 
-    extern cv::Mat  dino_0_img = cv::imread(settings.get("match.dinosaur1", "res/dinosaur_stand.bmp"), CV_LOAD_IMAGE_GRAYSCALE);
-    extern cv::Mat  dino_1_img = cv::imread(settings.get("match.dinosaur2", "res/dinosaur_down.bmp" ), CV_LOAD_IMAGE_GRAYSCALE);
-    extern cv::Mat    bird_img = cv::imread(settings.get("match.bird"     , "res/bird.bmp"),           CV_LOAD_IMAGE_GRAYSCALE);
-    extern cv::Mat  cactus_img = cv::imread(settings.get("match.cactus"   , "res/cactus.bmp"),         CV_LOAD_IMAGE_GRAYSCALE);
-    extern cv::Mat restart_img = cv::imread(settings.get("match.restart"  , "res/restart.bmp"),        CV_LOAD_IMAGE_GRAYSCALE);
+    extern cv::Mat  dino_0_img = cv::imread(settings.get("match.dinosaur1", "template/dinosaur_stand.bmp"), CV_LOAD_IMAGE_GRAYSCALE);
+    extern cv::Mat  dino_1_img = cv::imread(settings.get("match.dinosaur2", "template/dinosaur_down.bmp" ), CV_LOAD_IMAGE_GRAYSCALE);
+    extern cv::Mat    bird_img = cv::imread(settings.get("match.bird"     , "template/bird.bmp"),           CV_LOAD_IMAGE_GRAYSCALE);
+    extern cv::Mat  cactus_img = cv::imread(settings.get("match.cactus"   , "template/cactus.bmp"),         CV_LOAD_IMAGE_GRAYSCALE);
+    extern cv::Mat restart_img = cv::imread(settings.get("match.restart"  , "template/restart.bmp"),        CV_LOAD_IMAGE_GRAYSCALE);
 
     extern bool is_loading_completed
         =!( dino_0_img.empty()
@@ -84,6 +84,7 @@ namespace mycalc
     extern const int mid_flying_enemy_height = settings.get("mycalc.mid_flying_enemy_height", 20);
     extern const int func_param_k            = settings.get("mycalc.func_param_k", 40);
     extern const int func_param_b            = settings.get("mycalc.func_param_b", 18);
+    extern const size_t keep_jumping         = settings.get("mycalc.keep_jumping", 1U);
 }
 
 /*  other */

@@ -27,6 +27,8 @@ namespace hb { namespace cfg { namespace mycalc
 
     extern const int func_param_k;
     extern const int func_param_b;
+
+    extern const size_t keep_jumping;
 } } }
 
 /****************************************************************************
@@ -38,7 +40,7 @@ struct hb::my_mind::Pimpl
     int anchor_x;
     int anchor_y;
     Action lst_act;
-    bool jump_again;
+    size_t keep_jumping;
     Info origin;
     std::vector<Info> obstacles;
 };
@@ -68,7 +70,7 @@ void hb::my_mind::clear()
 {
     auto & p = *pimpl;
 
-    p.jump_again = false;
+    p.keep_jumping = 0U;
     p.lst_act = Action::IDLE;
     p.anchor_x = 0;
     p.anchor_y = 0;
@@ -137,10 +139,10 @@ hb::Action hb::my_mind::get() const
         if (closest.x + closest.sx * time / 100 < (closest.w >> 2)) {
             if (p.lst_act != Action::JUMP && origin.y < 1) {
                 // logger::msg("^(", th, ")");
-                p.jump_again = true;
+                p.keep_jumping = hb::cfg::mycalc::keep_jumping;
                 return (p.lst_act = Action::JUMP);
-            } else if (p.jump_again == true) {
-                p.jump_again = false;
+            } else if (p.keep_jumping != 0U) {
+                p.keep_jumping--;
                 // logger::msg("^^(", th, ")");
                 return (p.lst_act = Action::JUMP);
             } else {

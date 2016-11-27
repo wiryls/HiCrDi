@@ -13,7 +13,7 @@ namespace GUI
             {
                 if(this.isRunning != value) {
                     this.isRunning = value;
-                    this.mainTimer.Enabled = this.isRunning;
+                    this.main_timer.Enabled = this.isRunning;
                     if(!this.isRunning) {
                         this.isHitting = false;
                         heart.Pause();

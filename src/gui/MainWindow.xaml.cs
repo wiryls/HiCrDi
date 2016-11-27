@@ -14,7 +14,7 @@ namespace GUI
             InitializeComponent();
             this.View.DataContext = this;
             this.IsTesting = true;
-            this.mainTimer.Elapsed += new ElapsedEventHandler(ProcessFrame);
+            this.main_timer.Elapsed += new ElapsedEventHandler(ProcessFrame);
 
             try {
                 heart = new Utility.Heart();
@@ -48,7 +48,7 @@ namespace GUI
         private void Window_Close(object sender, RoutedEventArgs e)
         {
             heart.Stop();
-            this.mainTimer.Close();
+            this.main_timer.Close();
             Close();
             e.Handled = true;
             /* References:
