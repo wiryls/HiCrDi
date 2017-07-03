@@ -62,7 +62,7 @@ load(const std::string & filePath)
         case' ':
             break;
         default:    /* key=value */
-            int idxOfEqu = line.find_first_of('=');
+            size_t idxOfEqu = line.find_first_of('=');
             if (line.npos == idxOfEqu)
                 break;
             auto key = line.substr(0, idxOfEqu);

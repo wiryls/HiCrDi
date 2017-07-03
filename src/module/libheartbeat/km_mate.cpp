@@ -9,6 +9,7 @@
  *
  ***************************************************************************/
 
+#include <cstdio>
 #include <algorithm>
 #include <functional>
 #include <numeric>
@@ -47,8 +48,8 @@ struct traceable_object_t
     std::deque<float> sx;
     std::deque<float> sy;
     float r;  /* reliability [0, 1] */
-    size_t t; /* type */
-    size_t i; /* id */
+    unsigned t; /* type */
+    unsigned i; /* id */
 };
 
 template<typename T> inline T avg_speed(const std::deque<T> & src)
@@ -322,7 +323,7 @@ hb::km_mate::Self & hb::km_mate::operator >> (cv_board & other)
 
     for (auto & o : p.objects) {
         char buffer[20];
-        std::sprintf(buffer, "%u", o.i);
+        ::sprintf_s(buffer, "%u", o.i);
 
         auto w = static_cast<int>(o.w);
         auto h = static_cast<int>(o.h);

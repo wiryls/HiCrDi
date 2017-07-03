@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Timers;
 using System.Windows;
 using System.Windows.Media;
@@ -52,16 +51,8 @@ namespace GUI
             if (heart.IsGameOver()) {
                 if (this.isDead == false && this.IsAutoScreenshot == true) {
                     heart.Pause();
-                    try {
-                        var folder_path = "screenshot";
-                        if(!Directory.Exists(folder_path))
-                            Directory.CreateDirectory(folder_path);
-                        var fs = File.Open(folder_path + "\\" + DateTime.Now.ToString("HHmmss") + ".png", FileMode.OpenOrCreate);
-                        ImageHelper.GenerateImage(bitmapSource, ".png", fs);
-                        fs.Close();
-                    } catch(Exception) {
-                        // TODO:
-                    }
+                    var folder_path = "screenshot" + "\\" + DateTime.Now.ToString("HHmmss") + ".png";
+                    ImageHelper.SaveImgFile(bitmapSource, folder_path);
                     heart.Resume();
                 }
                 if (this.IsAutoRestart == true) {
@@ -104,28 +95,53 @@ namespace GUI
 
         private void UpdateBorderEffect()
         {
-            ColorAnimation animation = new ColorAnimation()
-            {
-                Duration = new Duration(TimeSpan.FromSeconds(0.618)),
-                FillBehavior = FillBehavior.HoldEnd
-            };
+            var time = TimeSpan.FromSeconds(0.618);
+            var color_idle      = Color.FromScRgb(0.8f, 1.0f, 1.0f, 1.0f);
+            var color_searching = Color.FromScRgb(0.8f, 0.8f, 0.1f, 0.1f);
+            var color_hitting_l = Color.FromScRgb(0.8f, 0.05f, 0.6f, 0.05f);
+            var color_hitting_h = Color.FromScRgb(0.8f, 0.1f, 0.9f, 0.1f);
+
+            Storyboard story = new Storyboard();
 
             if (!isRunning) {
-                animation.To   = Color.FromScRgb(0.8f, 1.0f, 1.0f, 1.0f);
+                story.Children.Add(new ColorAnimation
+                {
+                    Duration = new Duration(time),
+                    FillBehavior = FillBehavior.HoldEnd,
+                    To = color_idle
+                });
             } else if (!isHitting) {
-                animation.To   = Color.FromScRgb(0.8f, 1.0f, 0.0f, 0.0f);
+                story.Children.Add(new ColorAnimation
+                {
+                    Duration = new Duration(time),
+                    FillBehavior = FillBehavior.HoldEnd,
+                    To = color_searching
+                });
             } else { /* isRunning && Hitting */
-                animation.To   = Color.FromScRgb(0.85f, 0.05f, 1.0f, 0.05f);
-                animation.From = Color.FromScRgb(0.75f, 0.1f, 0.9f, 0.1f);
-                animation.RepeatBehavior = RepeatBehavior.Forever;
-                animation.AutoReverse = true;
+                story.Children.Add(new ColorAnimation
+                {
+                    Duration = new Duration(time),
+                    FillBehavior = FillBehavior.HoldEnd,
+                    To = color_hitting_l,
+                });
+
+                story.Children.Add(new ColorAnimation
+                {
+                    BeginTime = time,
+                    Duration = new Duration(TimeSpan.FromSeconds(0.618 * 2)),
+                    FillBehavior = FillBehavior.HoldEnd,
+                    From = color_hitting_l,
+                    To   = color_hitting_h,
+                    RepeatBehavior = RepeatBehavior.Forever,
+                    AutoReverse = true
+                });
             }
 
-            Storyboard stroy = new Storyboard();
-            stroy.Children.Add(animation);
-            Storyboard.SetTarget(animation, BreathingBorder);
-            Storyboard.SetTargetProperty(animation, new PropertyPath("BorderBrush.Color"));
-            stroy.Begin();
+            foreach(var animation in story.Children) {
+                Storyboard.SetTarget(animation, BreathingBorder);
+                Storyboard.SetTargetProperty(animation, new PropertyPath("BorderBrush.Color"));
+            }
+            story.Begin();
 
             /* References:
              *

@@ -55,7 +55,7 @@ void hb::cv_board::set(uint8_t * img_8u1c, size_t hgt, size_t wid)
         return;
 
     auto & p = *pimpl;
-    cv::Mat(hgt, wid, CV_8UC1, img_8u1c).copyTo(p.img);
+    cv::Mat((int)hgt, (int)wid, CV_8UC1, img_8u1c).copyTo(p.img);
 }
 
 void hb::cv_board::put(int x, int y, const char * text, double scale, int thickness, double color)
@@ -85,10 +85,10 @@ void hb::cv_board::put(int x, int y, size_t w, size_t h, int thickness, double c
 
     auto & p = *pimpl;
     auto & img = p.img;
-    x =            x - (w >> 1);
-    y = img.rows - y - (h >> 1);
+    x =            x - static_cast<decltype(x)>(w >> 1);
+    y = img.rows - y - static_cast<decltype(y)>(h >> 1);
 
-    cv::Rect2i r(x, y, w, h);
+    cv::Rect2i r(x, y, static_cast<int>(w), static_cast<int>(h));
     cv::rectangle(img, r, cv::Scalar::all(color), thickness);
 }
 

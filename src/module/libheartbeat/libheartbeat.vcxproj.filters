@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="source">
+      <UniqueIdentifier>{b107e394-a2f7-4189-9b1b-05e4a1e69f88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\utility">
+      <UniqueIdentifier>{0fa3aa90-0d72-4aea-8a3e-61cad07925f2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="libheartbeat.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="utility\algorithm.hpp">
+      <Filter>source\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\iniparser.hpp">
+      <Filter>source\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\log.hpp">
+      <Filter>source\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\randnum.hpp">
+      <Filter>source\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\settings.hpp">
+      <Filter>source\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\singleton.hpp">
+      <Filter>source\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\timer.hpp">
+      <Filter>source\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\types.hpp">
+      <Filter>source\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="cv_eye.hpp">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="datatype.hpp">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="heart.hpp">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="ibeat.hpp">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="km_mate.hpp">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="libheartbeat.hpp">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="my_mind.hpp">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="cv_board.hpp">
+      <Filter>source</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="libheartbeat.aps" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="utility\algorithm.cpp">
+      <Filter>source\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\iniparser.cpp">
+      <Filter>source\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\log.cpp">
+      <Filter>source\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\randnum.cpp">
+      <Filter>source\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\settings.cpp">
+      <Filter>source\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\timer.cpp">
+      <Filter>source\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="heart.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="km_mate.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="libheartbeat.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="my_mind.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="config.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="cv_board.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="cv_eye.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

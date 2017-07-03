@@ -9,6 +9,7 @@
  *
  ***************************************************************************/
 
+#include <cstdio>
 #include <algorithm>
 
 #include "utility/log.hpp"
@@ -105,7 +106,7 @@ const hb::my_mind::Self & hb::my_mind::operator >> (cv_board & other) const
         auto y = (o.sy * 40 / 100) + o.y + y0;
 
         char buffer[20];
-        std::sprintf(buffer, "%d", -o.sx / 90);
+        ::sprintf_s(buffer, "%d", -o.sx / 90);
         other.put(x, y + 30, buffer, 0.8, 1, 128.0);
 
         other.put(x, y, 1, 64, 4, 64.0);

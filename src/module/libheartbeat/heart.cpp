@@ -132,7 +132,7 @@ void hb::Heart::know(uint8_t bgra32[], size_t wid, size_t hgt) const
 
     p.processor01 >> p.processor00;
     p.processor02 >> p.processor00;
-    p.processor03>> p.processor00;
+    p.processor03 >> p.processor00;
 
     p.processor00.dump(bgra32, wid, hgt);
 }

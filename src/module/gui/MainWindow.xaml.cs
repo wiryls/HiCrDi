@@ -13,7 +13,7 @@ namespace GUI
         {
             InitializeComponent();
             this.View.DataContext = this;
-            this.IsTesting = true;
+            // this.IsTesting = true;
             this.main_timer.Elapsed += new ElapsedEventHandler(ProcessFrame);
 
             try {
@@ -33,8 +33,8 @@ namespace GUI
             if (!heart.IsReady()) {
                 MessageBox.Show
                 (
-                    "初始化失败，您可以检查日志文件以查阅具体的错误信息。",
-                    "加载资源文件时发生错误",
+                    "初始化失败，可能是缺少一些必要的配置文件。",
+                    "加载文件时发生错误",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error
                 );
@@ -83,6 +83,13 @@ namespace GUI
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             this.DebugOutput.Source = null;
+        }
+
+        private void Window_StateChanged(object sender, System.EventArgs e)
+        {
+            /* no maximized window */
+            if(this.WindowState == WindowState.Maximized)
+                this.WindowState = WindowState.Normal;
         }
     }
 }

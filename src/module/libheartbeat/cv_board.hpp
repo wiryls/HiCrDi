@@ -38,11 +38,12 @@ public:
 
     void set(uint8_t * img_8u1c, size_t hgt, size_t wid);
 
+    // y
     // ^
     // |
     // |
     // |
-    // 0---------->
+    // 0----------> x
 
     void put(int x, int y, const char * text, double scale, int thickness, double color);
 

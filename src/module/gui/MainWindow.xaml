@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Eye of Heart" Height="180" MinHeight="100" MaxHeight="300" Width="640" MinWidth="300" MaxWidth="800"
         Background="Transparent" AllowsTransparency="True" WindowStyle="None" ResizeMode="CanResizeWithGrip" Topmost="True"
-        MouseDown="Window_DragMove" MouseDoubleClick="Window_MouseDoubleClick" SizeChanged="Window_SizeChanged" >
+        MouseDown="Window_DragMove" MouseDoubleClick="Window_MouseDoubleClick" SizeChanged="Window_SizeChanged" StateChanged="Window_StateChanged" >
     <Grid x:Name="View" >
         <Grid.Resources>
             <ContextMenu x:Key="MainMenu">

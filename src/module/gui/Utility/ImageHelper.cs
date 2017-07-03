@@ -86,7 +86,7 @@ namespace GUI.Utility
              */
         }
 
-        public static void SaveImgFile(BitmapSource img)
+        public static bool SaveImgFile(BitmapSource img, string fullname = null)
         {
             /*
              * References:
@@ -95,25 +95,46 @@ namespace GUI.Utility
              * (http://stackoverflow.com/questions/5622854/how-do-i-show-a-save-as-dialog-in-wpf)
              */
 
-            var dlg = new Microsoft.Win32.SaveFileDialog()
+            if (fullname == null)
             {
-                DefaultExt = "*.bmp|*.png|*.jpg|*.gif|*tif",
-                Filter = "Bitmap (*.bmp)|*.bmp"
-                       + "|PNG image (*.png)|*.png"
-                       + "|JPEG image (*.jpg)|*.jpg"
-                       + "|GIF image (*.gif)|*.gif"
-                       + "|TIF image (*.tif)|*.tif"
-            };
+                var dlg = new Microsoft.Win32.SaveFileDialog
+                {
+                    DefaultExt = "*.bmp|*.png|*.jpg|*.gif|*tif",
+                    Filter = "Bitmap (*.bmp)|*.bmp"
+                           + "|PNG image (*.png)|*.png"
+                           + "|JPEG image (*.jpg)|*.jpg"
+                           + "|GIF image (*.gif)|*.gif"
+                           + "|TIF image (*.tif)|*.tif"
+                };
 
-            var result = dlg.ShowDialog();
-            if(result == true) {
-                var filename = dlg.FileName;
-                var Extension = System.IO.Path.GetExtension(filename).ToLower();
-                var fs = File.Open(filename, FileMode.Create);
-
-                ImageHelper.GenerateImage(img, Extension, fs);
-                fs.Close();
+                var result = dlg.ShowDialog();
+                if (result == true)
+                    fullname = dlg.FileName;
             }
+
+            bool rv = false;
+
+            if(fullname != null) {
+                var filename = fullname;
+                var extension = System.IO.Path.GetExtension(filename).ToLower();
+                try {
+                    FileInfo fi = new FileInfo(filename);
+                    var di = fi.Directory;
+                    if(!di.Exists)
+                        di.Create();
+
+                    var fs = File.Open(filename, FileMode.OpenOrCreate);
+                    ImageHelper.GenerateImage(img, extension, fs);
+                    fs.Close();
+                    rv = true;
+                } catch (System.IO.DirectoryNotFoundException) {
+                } catch(System.IO.IOException) {
+                } catch(System.UnauthorizedAccessException) {
+                } catch(System.NotSupportedException) {
+                }
+            }
+
+            return rv;
         }
     }
 }

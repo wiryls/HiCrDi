@@ -141,7 +141,7 @@ std::vector<hb::Object> find_several(cv::Mat const & src, cv::Mat const & tmpl, 
     std::vector<hb::Object> rv;
     for (auto iter = mask.datastart; iter != mask.dataend; iter++) { /* note: fast but not safe */
         if (*iter == 255) {
-            int i = (iter - mask.datastart);
+            int i = static_cast<int>(iter - mask.datastart);
             int x = i % mask.cols;
             int y = i / mask.cols;
 
@@ -310,7 +310,7 @@ void hb::cv_eye::set(uint8_t const * bgra32, size_t wid, size_t hgt)
     auto & img = p.img;
 
     if (bgra32 && wid && hgt) {
-        image_process(cv::Mat(hgt, wid, CV_8UC4, (void *)bgra32), img);
+        image_process(cv::Mat((int)hgt, (int)wid, CV_8UC4, (void *)bgra32), img);
 
         if (img.empty()) {
             logger::err(typeid(*this), ":: source image has something wrong.");
